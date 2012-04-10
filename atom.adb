@@ -27,6 +27,11 @@ package body Atom is
 		return Atom.all.Z;
 	end Get_Z;
 	
+	function Get_Next(Atom : in Atom_Ptr) return Atom_Ptr is
+	begin
+		return Atom.all.Next;
+	end Get_Next;
+	
 	
 	function Is_Empty(Atom : in Atom_Ptr) return Boolean is
 	begin

@@ -10,6 +10,7 @@ package Atom is
    function Get_X(Atom : in Atom_Ptr) return Integer;
    function Get_Y(Atom : in Atom_Ptr) return Integer;
    function Get_Z(Atom : in Atom_Ptr) return Integer;
+   function Get_Next(Atom : in Atom_Ptr) return Atom_Ptr;
    
    procedure Set_X(Atom : in Atom_Ptr; X : in Integer);
    procedure Set_Y(Atom : in Atom_Ptr; Y : in Integer);
@@ -21,9 +22,10 @@ private
    type Atom_Ptr is access Atom_Type;
    type Atom_Type is
 	  record
-		 X : Integer;
-		 Y : Integer;
-		 Z : Integer;
+		  Next : Atom_Ptr;
+		  X : Integer;
+		  Y : Integer;
+		  Z : Integer;
 	  end record;
 
 end Atom;
