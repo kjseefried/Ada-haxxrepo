@@ -59,7 +59,9 @@ package body Atom is
 
 	procedure Set_Next(Atom : in Atom_Ptr; Next : in Atom_Ptr) is
 	begin
-	   Atom.all.Next := Next;
+
+		Atom.all.Next := Next;
+
 	end Set_Next;
 
       procedure Put(Atom : in Atom_Ptr) is
