@@ -102,6 +102,11 @@ package body Part is
         return Part.All.Size;
     end Get_Size;
 
+    procedure Put (Part : in Part_Ptr) is
+    begin
+        Put_All(Get_Data(Part));
+    end Put;
+
     procedure Free_Part (Part : in out Part_Ptr) is
 
         procedure Free is

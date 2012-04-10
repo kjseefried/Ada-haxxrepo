@@ -1,4 +1,6 @@
 with Ada.Unchecked_Deallocation;
+with Ada.Text_IO; use ada.Text_IO;
+with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 
 package body Atom is
 
@@ -60,6 +62,24 @@ package body Atom is
 	   Atom.all.Next := Next;
 	end Set_Next;
 
+      procedure Put(Atom : in Atom_Ptr) is
+       begin
+           Put(Get_X(Atom),0);
+           Put(" ");
+           Put(Get_Y(Atom),0);
+           Put(" ");
+           Put(Get_Z(Atom),0);
+      end Put;
+
+       procedure Put_All(Atom : in Atom_Ptr) is
+           temp : Atom_Ptr := Atom;
+       begin
+           while not Is_Empty(temp) loop
+               Put(temp);
+               New_Line;
+               temp := temp.all.Next;
+           end loop;
+       end Put_All;
 
 	procedure Free_Atom(Atom : in out Atom_Ptr) is
 		procedure Free is
