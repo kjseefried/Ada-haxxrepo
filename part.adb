@@ -7,7 +7,7 @@ package body Part is
         Part : Part_Ptr;
     begin
         Part := new Part_Type;
-        Part.All.Size := 0;
+        Part.All.Size  := 0;
         Part.All.Max_X := 0;
         Part.All.Max_Y := 0;
         Part.All.Max_Z := 0;
@@ -19,7 +19,20 @@ package body Part is
         Temp1 : Atom_Ptr;
         Temp2 : Atom_Ptr;
     begin
-
+		
+		if Get_X(Atom) > Part.all.Max_X then
+			Part.all.Max_X := Get_X(Atom);
+		end if;
+		
+		if Get_Y(Atom) > Part.all.Max_Y then
+			Part.all.Max_Y := Get_Y(Atom);
+		end if;
+		
+		if Get_Z(Atom) > Part.all.Max_Z then
+			Part.all.Max_Z := Get_Z(Atom);
+		end if;
+		
+		
         if Is_Empty(Part) then
             Part.all.Data := Atom;
             return;
@@ -30,24 +43,27 @@ package body Part is
 
         loop
             if Get_Z(Atom) >= Get_Z(Temp1) or
-               Get_Y(Atom) >= Get_Y(Temp1) or
-               Get_X(Atom) >= Get_X(Temp1) then
+			  Get_Y(Atom) >= Get_Y(Temp1) or
+			  Get_X(Atom) >= Get_X(Temp1) then
 
-                   if Is_Empty(Temp1) then
-                       Set_Next(Temp2, Atom);
-                       return;
-                   end if;
+				if Is_Empty(Temp1) then
+					Set_Next(Temp2, Atom);
+					return;
+				end if;
 
-                   if Temp1 = Temp2 then
-                       Set_Next(Atom, Part.all.Data);
-                       Part.all.Data := Atom;
-                       return;
-                   end if;
+				if Temp1 = Temp2 then
+					Set_Next(Atom, Part.all.Data);
+					Part.all.Data := Atom;
+					return;
+				end if;
 
-                   Set_Next(Atom, Temp1);
-                   Set_Next(Temp2, Atom);
-                   return;
-             end if;
+				Set_Next(Atom, Temp1);
+				Set_Next(Temp2, Atom);
+				return;
+			end if;
+			
+			Temp2 := Temp1;
+			Temp1 := Temp1.all.Next;
         end loop;
     end Insert;
 
@@ -89,9 +105,9 @@ package body Part is
     procedure Free_Part (Part : in out Part_Ptr) is
 
         procedure Free is
-        new Ada.Unchecked_Deallocation(
-            Object => Part_Type,
-            Name   => Part_Ptr);
+			new Ada.Unchecked_Deallocation(
+										   Object => Part_Type,
+										   Name   => Part_Ptr);
     begin
         Free(Part);
         Part := null;
