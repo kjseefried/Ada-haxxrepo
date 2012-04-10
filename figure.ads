@@ -1,14 +1,12 @@
 package Figure is
 
-<<<<<<< HEAD
-    function Create_Figure() return Figure_Ptr;
-=======
-type Figure_Ptr is private;
 
-    function Create_Figure () return Figure_Ptr;
->>>>>>> remote/master
+	type Figure_Ptr is private;
+	type Figure_Type is private;
+	
+    function Create_Figure return Figure_Ptr;
 
-    function Get_Next (Figure : in Figure_Ptr) return Integer;
+    function Get_Next (Figure : in Figure_Ptr) return Figure_Ptr;
 
     function Get_Max_X (Figure : in Figure_Ptr) return Integer;
     function Get_Max_Y (Figure : in Figure_Ptr) return Integer;

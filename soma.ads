@@ -1,6 +1,7 @@
 
 package Soma is
    type Soma_Ptr is private;
+   type Soma_Type is private;
 
    function Create_Soma(X, Y, Z : Integer) return Soma_Ptr;
    

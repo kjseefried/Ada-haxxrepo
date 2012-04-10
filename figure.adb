@@ -1,9 +1,8 @@
-with Ada.Integer_Text_IO;
-use Ada.Integer_Text_IO;
+with Ada.Unchecked_Deallocation;
 
 package body Figure is
 
-    function Create_Figure ()
+    function Create_Figure
       return Figure_Ptr is
     begin
         return new Figure_Type'(
