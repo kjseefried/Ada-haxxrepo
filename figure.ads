@@ -1,16 +1,18 @@
 package Figure is
 
+type Figure_Ptr is private;
+
     function Create_Figure () return Figure_Ptr;
 
-    function Get_Next (Figure : in Figure_Type) return Integer;
+    function Get_Next (Figure : in Figure_Ptr) return Integer;
 
-    function Get_Max_X (Figure : in Figure_Type) return Integer;
-    function Get_Max_Y (Figure : in Figure_Type) return Integer;
-    function Get_Max_Z (Figure : in Figure_Type) return Integer;
+    function Get_Max_X (Figure : in Figure_Ptr) return Integer;
+    function Get_Max_Y (Figure : in Figure_Ptr) return Integer;
+    function Get_Max_Z (Figure : in Figure_Ptr) return Integer;
 
-    function Get_Size (Figure : in Figure_Type) return Integer;
+    function Get_Size (Figure : in Figure_Ptr) return Integer;
 
-    procedure Free_Figure (Figure : in out Figure_Type);
+    procedure Free_Figure (Figure : in out Figure_Ptr);
 
 private
     type Figure_Ptr is access Figure_Type;
