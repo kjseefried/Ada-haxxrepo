@@ -54,6 +54,11 @@ package body Atom is
 	   Atom.all.Z := Z;
 	end Set_Z;
 	
+	procedure Set_Next(Atom : in Atom_Ptr; Next : in Atom_Ptr) is
+	begin
+	   Atom.all.Next := Next;
+	end Set_Z;
+		
 	
 	procedure Free_Atom(Atom : in out Atom_Ptr) is
 		procedure Free is

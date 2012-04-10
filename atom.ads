@@ -15,6 +15,7 @@ package Atom is
    procedure Set_X(Atom : in Atom_Ptr; X : in Integer);
    procedure Set_Y(Atom : in Atom_Ptr; Y : in Integer);
    procedure Set_Z(Atom : in Atom_Ptr; Z : in Integer);
+   procedure Set_Next(Atom : in Atom_Ptr; Next : in Atom_Ptr);
    
    procedure Free_Atom(Atom : in out Atom_Ptr);
 
