@@ -20,6 +20,8 @@ package Part is
 
     function Get_Size (Part : in Part_Ptr) return Integer;
 
+    procedure Put (Part : in Part_Ptr);
+
     procedure Free_Part (Part : in out Part_Ptr);
 
 private
