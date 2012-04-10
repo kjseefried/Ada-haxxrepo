@@ -28,7 +28,7 @@ private
     type Part_Ptr is access Part_Type;
     type Part_Type is
        record
-           Data : Atom_Ptr;
+          Data : Atom_Ptr;
           Size  : Integer;
           Max_X : Integer;
           Max_Y : Integer;
