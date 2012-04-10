@@ -1,4 +1,5 @@
 with Ada.Unchecked_Deallocation;
+with Ada.Text_IO; use ada.Text_IO;
 
 package body Part is
 
@@ -19,6 +20,14 @@ package body Part is
         Temp1 : Atom_Ptr;
         Temp2 : Atom_Ptr;
     begin
+
+		if Is_Empty(Part) then
+			Set_Data(Part, Atom);
+			Part.all.Size := Part.all.Size + 1;
+			return;
+		end if;
+
+		Part.all.Size := Part.all.Size + 1;
 		
 		if Get_X(Atom) > Part.all.Max_X then
 			Part.all.Max_X := Get_X(Atom);
@@ -42,16 +51,18 @@ package body Part is
         Temp2 := Get_Data(Part);
 
         loop
-            if Get_Z(Atom) >= Get_Z(Temp1) or
-			  Get_Y(Atom) >= Get_Y(Temp1) or
-			  Get_X(Atom) >= Get_X(Temp1) then
-
-				if Is_Empty(Temp1) then
-					Set_Next(Temp2, Atom);
-					return;
-				end if;
+			
+			if Is_Empty(Temp1) then
+				Set_Next(Temp2, Atom);
+				return;
+			end if;
+			
+            if Get_Z(Atom) <= Get_Z(Temp1) or
+			  Get_Y(Atom) <= Get_Y(Temp1) or
+			  Get_X(Atom) <= Get_X(Temp1) then
 
 				if Temp1 = Temp2 then
+					
 					Set_Next(Atom, Part.all.Data);
 					Part.all.Data := Atom;
 					return;
@@ -63,16 +74,23 @@ package body Part is
 			end if;
 			
 			Temp2 := Temp1;
-			Temp1 := Temp1.all.Next;
+			Temp1 := Get_Next(Temp1);
         end loop;
     end Insert;
+	
+	
 
+    procedure Set_Data (Part : in Part_Ptr; Atom : in Atom_Ptr) is
+    begin
+		Part.all.Data := Atom;
+    end Set_Data;
+	
 
     function Get_Data (Part : in Part_Ptr) return Atom_Ptr is
     begin
         return Part.All.Data;
     end Get_Data;
-
+    
     function Get_Max_X (Part : in Part_Ptr) return Integer is
     begin
         return Part.All.Max_X;
