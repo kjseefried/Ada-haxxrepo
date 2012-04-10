@@ -1,32 +1,29 @@
-package Figure is
+package Part is
 
 
-	type Figure_Ptr is private;
-	type Figure_Type is private;
-	
-    function Create_Figure return Figure_Ptr;
+	type Part_Ptr is private;
+	type Part_Type is private;
 
-    function Get_Next (Figure : in Figure_Ptr) return Figure_Ptr;
+    function Create_Part return Part_Ptr;
 
-    function Get_Max_X (Figure : in Figure_Ptr) return Integer;
-    function Get_Max_Y (Figure : in Figure_Ptr) return Integer;
-    function Get_Max_Z (Figure : in Figure_Ptr) return Integer;
+    function Get_Max_X (Part : in Part_Ptr) return Integer;
+    function Get_Max_Y (Part : in Part_Ptr) return Integer;
+    function Get_Max_Z (Part : in Part_Ptr) return Integer;
 
-    function Get_Size (Figure : in Figure_Ptr) return Integer;
+    function Get_Size (Part : in Part_Ptr) return Integer;
 
-    procedure Free_Figure (Figure : in out Figure_Ptr);
+    procedure Free_Part (Part : in out Part_Ptr);
 
 private
-    type Figure_Ptr is access Figure_Type;
-    type Figure_Type is
+    type Part_Ptr is access Part_Type;
+    type Part_Type is
        record
-          Next  : Figure_Ptr;
           Size  : Integer;
           Max_X : Integer;
           Max_Y : Integer;
           Max_Z : Integer;
        end record;
 
-end Figure;
+end Part;
 
 

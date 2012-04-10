@@ -1,51 +1,46 @@
 with Ada.Unchecked_Deallocation;
 
-package body Figure is
+package body Part is
 
-    function Create_Figure
-      return Figure_Ptr is
+    function Create_Part
+      return Part_Ptr is
     begin
-        return new Figure_Type'(
-            Next  => null,
+        return new Part_Type'(
             Size  => 0,
             Max_X => 0,
             Max_Y => 0,
             Max_Z => 0);
-    end Create_Figure;
+    end Create_Part;
 
-    function Get_Next(Figure : in Figure_Ptr) return Figure_Ptr is
-    begin
-        return Figure.all.Next;
-    end Get_Next;
 
-    function Get_Max_X(Figure : in Figure_Ptr) return Integer is
+    function Get_Max_X(Part : in Part_Ptr) return Integer is
     begin
-        return Figure.all.Max_X;
+        return Part.all.Max_X;
     end Get_Max_X;
 
-    function Get_Max_Y(Figure : in Figure_Ptr) return Integer is
+    function Get_Max_Y(Part : in Part_Ptr) return Integer is
     begin
-        return Figure.all.Max_Y;
+        return Part.all.Max_Y;
     end Get_Max_Y;
 
-    function Get_Max_Z(Figure : in Figure_Ptr) return Integer is
+    function Get_Max_Z(Part : in Part_Ptr) return Integer is
     begin
-        return Figure.all.Max_X;
+        return Part.all.Max_X;
     end Get_Max_Z;
 
 
-    function Get_Size(Figure : in Figure_Ptr) return Integer is
+    function Get_Size(Part : in Part_Ptr) return Integer is
     begin
-        return Figure.all.Size;
+        return Part.all.Size;
     end Get_Size;
 
-    procedure Free_Figure(Figure : in out Figure_Ptr) is
+    procedure Free_Part(Part : in out Part_Ptr) is
 		procedure Free is
-			new Ada.Unchecked_Deallocation(Object => Figure_Type,
-										   Name => Figure_Ptr);
+			new Ada.Unchecked_Deallocation(Object => Part_Type,
+										   Name => Part_Ptr);
 	begin
-		Free(Figure);
-		Figure := null;
-	end Free_Figure;
+		Free(Part);
+		Part := null;
+	end Free_Part;
 
 end;
