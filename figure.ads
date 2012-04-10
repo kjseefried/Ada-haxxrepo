@@ -1,6 +1,6 @@
 package Figure is
 
-    function Create_Figure () return Figure_Ptr;
+    function Create_Figure() return Figure_Ptr;
 
     function Get_Next (Figure : in Figure_Type) return Integer;
 

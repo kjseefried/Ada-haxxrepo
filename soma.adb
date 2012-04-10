@@ -37,6 +37,4 @@ package body Soma is
 		Free(Soma);
 		Soma := null;
 	end Free_Soma;
-
-
 end Soma;
