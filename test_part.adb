@@ -1,5 +1,6 @@
 with Part; use Part;
 with Ada.Integer_Text_IO; use ada.Integer_Text_IO;
+with ada.Text_IO; use ada.Text_IO;
 
 procedure Test_Part is
 
@@ -8,8 +9,13 @@ procedure Test_Part is
 begin
 
     Part := Create_Part;
+    if Is_Empty(Part) then
+        put(1,0);
+    else
+        put(0,0);
+    end if;
 
-    put(Get_Max_X(Part),0);
+
 
 end Test_Part;
 
