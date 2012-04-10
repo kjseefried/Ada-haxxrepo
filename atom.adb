@@ -2,8 +2,7 @@ with Ada.Unchecked_Deallocation;
 
 package body Atom is
 
-	function Create_Atom(X, Y, Z : Integer) return Atom_Ptr is
-		
+	function Create_Atom(X, Y, Z : Integer) return Atom_Ptr is		
 	begin
 		return new Atom_Type'(X => X,
 							  Y => Y,
@@ -27,6 +26,12 @@ package body Atom is
 	begin
 		return Atom.all.Z;
 	end Get_Z;
+	
+	
+	function Is_Empty(Atom : in Atom_Ptr) return Boolean is
+	begin
+		return Atom = null;
+	end Is_Empty;
 	
 	
 	procedure Set_X(Atom : in Atom_Ptr; X : in Integer) is

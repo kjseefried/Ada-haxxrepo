@@ -5,6 +5,8 @@ package Atom is
 
    function Create_Atom(X, Y, Z : Integer) return Atom_Ptr;
    
+   function Is_Empty(Atom : in Atom_Ptr) return Boolean;
+   
    function Get_X(Atom : in Atom_Ptr) return Integer;
    function Get_Y(Atom : in Atom_Ptr) return Integer;
    function Get_Z(Atom : in Atom_Ptr) return Integer;
