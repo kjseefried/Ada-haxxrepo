@@ -18,7 +18,7 @@ begin
     Part := Create_Part;
 
     Atom1 := Create_Atom(1,-1,0);
-    Atom2 := Create_Atom(2,-1,0);
+    Atom2 := Create_Atom(1,-1,0);
     Atom3 := Create_Atom(3,-1,0);
     Atom4 := Create_Atom(1,-2,0);
     Atom5 := Create_Atom(1,-3,0);

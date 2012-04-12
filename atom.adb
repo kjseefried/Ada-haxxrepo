@@ -3,7 +3,7 @@ with Ada.Text_IO; use ada.Text_IO;
 with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 
 package body Atom is
-	
+
 	---------------------------------------------------------------------------
 	-- Creates an Atom an initialize all coordinates to 0 and sets Next to null.
 	---------------------------------------------------------------------------
@@ -42,8 +42,8 @@ package body Atom is
 		return Atom.all.Z;
 	end Get_Z;
 
-	
-	
+
+
 	---------------------------------------------------------------------------
 	-- Set the X coordinate of an Atom
 	---------------------------------------------------------------------------
@@ -67,8 +67,8 @@ package body Atom is
 	begin
 	   Atom.all.Z := Z;
 	end Set_Z;
-	
-	
+
+
 	---------------------------------------------------------------------------
 	-- Get the next Atom in the list.
 	---------------------------------------------------------------------------
@@ -76,8 +76,8 @@ package body Atom is
 	begin
 		return Atom.all.Next;
 	end Get_Next;
-	
-	
+
+
 	---------------------------------------------------------------------------
 	-- Set the the next element of an Atom
 	---------------------------------------------------------------------------
@@ -87,7 +87,7 @@ package body Atom is
 		Atom.all.Next := Next;
 
 	end Set_Next;
-	
+
 
 	---------------------------------------------------------------------------
 	-- Checks if the given Atom_Ptr is null
@@ -96,8 +96,8 @@ package body Atom is
 	begin
 		return Atom = null;
 	end Is_Empty;
-	
-	
+
+
     ---------------------------------------------------------------------------
 	-- Put an atom
 	---------------------------------------------------------------------------
@@ -109,23 +109,34 @@ package body Atom is
            Put(" ");
            Put(Get_Z(Atom),0);
       end Put;
-	  
-	  
-    ---------------------------------------------------------------------------
+
+
+      ---------------------------------------------------------------------------
 	-- Put a list of atoms
 	---------------------------------------------------------------------------
 	procedure Put_All(Atom : in Atom_Ptr) is
            temp : Atom_Ptr := Atom;
-       begin
+      begin
            while not Is_Empty(temp) loop
                Put(temp);
                New_Line;
                temp := temp.all.Next;
            end loop;
-       end Put_All; 
-	---------------------------------------------------------------------------
-	-- Deallocate the memory of an atom.
-	---------------------------------------------------------------------------
+       end Put_All;
+
+    ---------------------------------------------------------------------------
+    -- Deallocate the memory of an atom.
+    ---------------------------------------------------------------------------
+    function "=" (Left,Right : in Atom_Ptr) return Boolean is
+    begin
+        return Get_X(Left) = Get_X(Right) and
+                Get_Y(Left) = Get_Y(Right) and
+                Get_Z(Left) = Get_Z(Right);
+     end "=";
+
+    ---------------------------------------------------------------------------
+    -- Deallocate the memory of an atom.
+    ---------------------------------------------------------------------------
 	procedure Free(Atom : in out Atom_Ptr) is
 		procedure Free is
 			new Ada.Unchecked_Deallocation(Object => Atom_Type,

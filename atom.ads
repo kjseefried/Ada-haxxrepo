@@ -17,6 +17,8 @@ package Atom is
    procedure Set_Z(Atom : in Atom_Ptr; Z : in Integer);
    procedure Set_Next(Atom : in Atom_Ptr; Next : in Atom_Ptr);
 
+    function "=" (Left,Right : in Atom_Ptr) return Boolean;
+
    procedure Put(Atom : in Atom_Ptr);
    procedure Put_All(Atom : in Atom_Ptr);
 
