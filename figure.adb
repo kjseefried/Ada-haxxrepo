@@ -11,10 +11,16 @@ package body Figure is
 	end Create_Figure;
 	
 	
-	function Has_Next(Figure : in out Figure_Ptr) return Boolean is
+	function Is_Empty (Figure : in Figure_Ptr) return Boolean is
 	begin
-		return Figure.all.Next /= null;
-	end Has_Next;
+		return Figure.all.Size = 0;
+	end Is_Empty;
+	
+	
+	function Get_Data (Figure : in Figure_Ptr) return Part_Ptr is
+	begin
+		return Figure.all.Data;
+	end Get_Data;
 	
 	
 	procedure Insert_Part (Figure : in out Figure_Ptr; Part : in Part_Ptr) is
@@ -23,12 +29,10 @@ package body Figure is
 	begin
 		if not Has_Next(Figure) then
 			
-			
 		end if;
 		
 		Temp1 := Figure;
-		Temp2 := Figure;
-		
+		Temp2 := Figure;	
 		
 	end Insert_Part;
 	
