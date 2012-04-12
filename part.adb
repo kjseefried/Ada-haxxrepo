@@ -16,7 +16,12 @@ package body Part is
         Part.All.Max_Y := 0;
         Part.All.Max_Z := 0;
 
-        return Part;
+        return new Part_Type'(Size => 0,
+							  Max_X => 0,
+							  Max_Y => 0,
+							  Max_Z => 0,
+							  Data  => Get_Atom_Null_Ptr,
+							  Next => null);
     end Create_Part;
 
 
@@ -59,7 +64,7 @@ package body Part is
 
         loop
 
-			if Is_Empty(Temp1) then
+			if not Has_Next(Temp2) then
 				Set_Next(Temp2, Atom);
 				return;
 			end if;
@@ -216,6 +221,7 @@ package body Part is
 		Temp_Part : Part_Ptr := Part;
 	begin
 		loop
+			
 			Put_All(Get_Data(Temp_Part));
 			Put_Line("-------------------");
 			if not Has_Next(Temp_Part) then
@@ -231,6 +237,7 @@ package body Part is
     ----------------------------------------------------------------------
     procedure Put (Part : in Part_Ptr) is
     begin
+
         Put_All(Get_Data(Part));
     end Put;
 
@@ -245,10 +252,13 @@ package body Part is
         Set_Max_X(Part,Get_Max_Y(Part));
         Set_Max_Y(Part,temp_max_x);
 
-        while not Is_Empty(temp_atom) loop
+		loop
             temp_part_x := -1 * Get_X(temp_atom);
             Set_X(temp_atom,Get_Y(temp_atom));
             Set_Y(temp_atom,temp_part_x);
+			if not Has_Next(Temp_Atom) then
+				return;
+			end if;
             temp_atom := Get_Next(temp_atom);
         end loop;
     end Rotate_Z;
@@ -264,10 +274,13 @@ package body Part is
         Set_Max_Z(Part,Get_Max_Y(Part));
         Set_Max_Y(Part,temp_max_z);
 
-        while not Is_Empty(temp_atom) loop
+        loop
             temp_part_z := -1 * Get_Z(temp_atom);
             Set_Z(temp_atom,Get_Y(temp_atom));
             Set_Y(temp_atom,temp_part_z);
+			if not Has_Next(Temp_Atom) then
+				return;
+			end if;
             temp_atom := Get_Next(temp_atom);
         end loop;
     end Rotate_X;
@@ -283,10 +296,13 @@ package body Part is
         Set_Max_X(Part,Get_Max_Z(Part));
         Set_Max_Z(Part,temp_max_x);
 
-        while not Is_Empty(temp_atom) loop
+        loop
             temp_part_x := -1 * Get_X(temp_atom);
             Set_X(temp_atom,Get_Z(temp_atom));
             Set_Z(temp_atom,temp_part_x);
+			if not Has_Next(Temp_Atom) then
+				return;
+			end if;
             temp_atom := Get_Next(temp_atom);
         end loop;
     end Rotate_Y;
@@ -300,9 +316,12 @@ package body Part is
 	begin
 		Set_Max_X(Part, Get_Max_X(Part) + Value);
 		
-        while not Is_Empty(Temp_Atom) loop
+        loop
 			Temp_X := Get_X(Temp_Atom);
 			Set_X(Temp_Atom, Get_X(Temp_Atom) + Value);
+			if not Has_Next(Temp_Atom) then
+				return;
+			end if;
 			Temp_Atom := Get_Next(Temp_Atom);
         end loop;		
 	end Move_X;
@@ -316,9 +335,12 @@ package body Part is
 	begin
 		Set_Max_Y(Part, Get_Max_Y(Part) + Value);
 		
-        while not Is_Empty(Temp_Atom) loop
+        loop
 			Temp_Y := Get_Y(Temp_Atom);
 			Set_Y(Temp_Atom, Get_Y(Temp_Atom) + Value);
+			if not Has_Next(Temp_Atom) then
+				return;
+			end if;
 			Temp_Atom := Get_Next(Temp_Atom);
         end loop;
 	end Move_Y;
@@ -332,9 +354,12 @@ package body Part is
 	begin
 		Set_Max_Z(Part, Get_Max_Z(Part) + Value);
 		
-        while not Is_Empty(Temp_Atom) loop
+        loop
 			Temp_Z := Get_Z(Temp_Atom);
 			Set_Z(Temp_Atom, Get_Z(Temp_Atom) + Value);
+			if not Has_Next(Temp_Atom) then
+				return;
+			end if;
 			Temp_Atom := Get_Next(Temp_Atom);
         end loop;		
 	end Move_Z;

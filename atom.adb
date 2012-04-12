@@ -10,11 +10,20 @@ package body Atom is
 	function Create_Atom(X, Y, Z : Integer) return Atom_Ptr is
 	begin
 		return new Atom_Type'(Next => null,
+							  Has_Next => False,
 							  X => X,
 							  Y => Y,
 							  Z => Z);
 	end Create_Atom;
-
+	
+	---------------------------------------------------------------------------
+	-- Returns a null Atom_Ptr
+	---------------------------------------------------------------------------
+	function Get_Atom_Null_Ptr return Atom_Ptr is
+		Atom : Atom_Ptr := null;
+	begin
+		return Atom;
+	end Get_Atom_Null_Ptr;
 
 	---------------------------------------------------------------------------
 	-- Get the X coordinate of an Atom
@@ -76,6 +85,14 @@ package body Atom is
 	begin
 		return Atom.all.Next;
 	end Get_Next;
+	
+	---------------------------------------------------------------------------
+	-- Get the next Atom in the list.
+	---------------------------------------------------------------------------
+	function Has_Next(Atom : in Atom_Ptr) return Boolean is
+	begin
+		return Atom.all.Has_Next;
+	end Has_Next;
 
 
 	---------------------------------------------------------------------------
@@ -83,9 +100,8 @@ package body Atom is
 	---------------------------------------------------------------------------
 	procedure Set_Next(Atom : in Atom_Ptr; Next : in Atom_Ptr) is
 	begin
-
+		Atom.all.Has_Next := True;
 		Atom.all.Next := Next;
-
 	end Set_Next;
 
 
@@ -102,7 +118,8 @@ package body Atom is
 	-- Put an atom
 	---------------------------------------------------------------------------
 	procedure Put(Atom : in Atom_Ptr) is
-       begin
+	begin
+
            Put(Get_X(Atom),0);
            Put(" ");
            Put(Get_Y(Atom),0);
@@ -111,16 +128,20 @@ package body Atom is
       end Put;
 
 
-      ---------------------------------------------------------------------------
+    ---------------------------------------------------------------------------
 	-- Put a list of atoms
 	---------------------------------------------------------------------------
 	procedure Put_All(Atom : in Atom_Ptr) is
-           temp : Atom_Ptr := Atom;
-      begin
-           while not Is_Empty(temp) loop
-               Put(temp);
+           Temp : Atom_Ptr := Atom;
+	begin
+
+           loop
+               Put(Temp);
                New_Line;
-               temp := temp.all.Next;
+			   if not Has_Next(Temp) then
+				   return;
+			   end if;
+               Temp := Temp.all.Next;
            end loop;
        end Put_All;
 
@@ -129,8 +150,8 @@ package body Atom is
     ---------------------------------------------------------------------------
     function "=" (Left,Right : in Atom_Ptr) return Boolean is
     begin
-        return Get_X(Left) = Get_X(Right) and
-                Get_Y(Left) = Get_Y(Right) and
+        return Get_X(Left) = Get_X(Right) and then
+                Get_Y(Left) = Get_Y(Right) and then
                 Get_Z(Left) = Get_Z(Right);
      end "=";
 

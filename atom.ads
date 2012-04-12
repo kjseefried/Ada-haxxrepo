@@ -5,13 +5,13 @@ package Atom is
 
    function Create_Atom(X, Y, Z : Integer) return Atom_Ptr;
 
-   function Is_Empty(Atom : in Atom_Ptr) return Boolean;
-
    function Get_X(Atom : in Atom_Ptr) return Integer;
    function Get_Y(Atom : in Atom_Ptr) return Integer;
    function Get_Z(Atom : in Atom_Ptr) return Integer;
    function Get_Next(Atom : in Atom_Ptr) return Atom_Ptr;
-
+   function Has_Next(Atom : in Atom_Ptr) return Boolean;
+   function Get_Atom_Null_Ptr return Atom_Ptr;
+   
    procedure Set_X(Atom : in Atom_Ptr; X : in Integer);
    procedure Set_Y(Atom : in Atom_Ptr; Y : in Integer);
    procedure Set_Z(Atom : in Atom_Ptr; Z : in Integer);
@@ -29,6 +29,7 @@ private
    type Atom_Type is
 	  record
 		  Next : Atom_Ptr;
+		  Has_Next : Boolean;
 		  X : Integer;
 		  Y : Integer;
 		  Z : Integer;
