@@ -3,7 +3,6 @@ with Ada.Unchecked_Deallocation;
 package body Part is
 
     function Create_Part return Part_Ptr is
-
         Part : Part_Ptr;
     begin
         Part := new Part_Type;
@@ -14,6 +13,7 @@ package body Part is
 
         return Part;
     end Create_Part;
+
 
     procedure Insert (Part : in out Part_Ptr; Atom : in Atom_Ptr) is
         Temp1 : Atom_Ptr;
@@ -77,6 +77,22 @@ package body Part is
         end loop;
     end Insert;
 
+	function Has_Next (Part : in Part_Ptr) return Boolean is
+	begin
+		return Part.all.Next /= null;
+	end Has_Next;
+
+
+	function Get_Next (Part : in Part_Ptr) return Part_Ptr is
+	begin
+		return Part.all.Next;
+	end Get_Next;
+
+
+	procedure Set_Next (Part : in Part_Ptr; Next : in Part_Ptr) is
+	begin
+		Part.all.Next := Next;
+	end Set_Next;
 
     function Get_Data (Part : in Part_Ptr) return Atom_Ptr is
     begin
