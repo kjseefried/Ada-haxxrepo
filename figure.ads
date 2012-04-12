@@ -9,8 +9,10 @@ package Figure is
 	function Get_Size (Figure : in Figure_Ptr) return Integer;
 	function Get_Data (Figure : in Figure_Ptr) return Part_Ptr;
 	
-	procedure Insert_Part (Figure : in out Figure_Ptr; Part : in Part_Ptr);
-	procedure Free_Figure (Figure : in out Figure_Ptr);
+	procedure Set_Data (Figure : in Figure_Ptr; Part : in Part_Ptr);
+	procedure Insert (Figure : in Figure_Ptr; Part : in Part_Ptr);
+	procedure Free (Figure : in out Figure_Ptr);
+	procedure Put (Figure : in Figure_Ptr);
 	
 private
 	type Figure_Ptr is access Figure_Type;

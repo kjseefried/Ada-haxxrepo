@@ -1,4 +1,6 @@
 with Ada.Unchecked_Deallocation;
+with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 
 package body Part is
 
@@ -136,7 +138,11 @@ package body Part is
     begin
         Part.all.Max_Z := Val;
     end Set_Max_Z;
-
+	
+	function Is_Null (Part : in Part_Ptr) return Boolean is
+	begin
+		return Part = null;
+	end Is_Null;
 
     function Is_Empty (Part : in Part_Ptr) return Boolean is
     begin
@@ -156,14 +162,26 @@ package body Part is
     begin
         Part.all.Size := Val;
     end Set_Size;
-
+	
+	procedure Put_All (Part : in Part_Ptr) is
+		Temp_Part : Part_Ptr := Part;
+	begin
+		loop
+			Put_All(Get_Data(Temp_Part));
+			Put_Line("-------------------");
+			if not Has_Next(Temp_Part) then
+				return;
+			end if;
+			Temp_Part := Get_Next(Temp_Part);
+		end loop;
+	end Put_All;
 
     procedure Put (Part : in Part_Ptr) is
     begin
         Put_All(Get_Data(Part));
     end Put;
 
-    procedure Free_Part (Part : in out Part_Ptr) is
+    procedure Free (Part : in out Part_Ptr) is
 
         procedure Free is
 			new Ada.Unchecked_Deallocation(
@@ -172,6 +190,6 @@ package body Part is
     begin
         Free(Part);
         Part := null;
-    end Free_Part;
+    end Free;
 
 end;
