@@ -53,18 +53,18 @@ private
     type Part_Ptr is access Part_Type;
     type Part_Type is
        record
-               Data : Atom_Ptr;
+		   Data : Atom_Ptr;
 		   Size  : Integer;
-                Min_X : Integer;
+		   Min_X : Integer;
 		   Max_X : Integer;
-                Min_Y : Integer;
+		   Min_Y : Integer;
 		   Max_Y : Integer;
-                Min_Z : Integer;
+		   Min_Z : Integer;
 		   Max_Z : Integer;
 		   Next  : Part_Ptr;
-               --Possibilities : Part_Ptr;
-               --Pos_Cntr : Integer;
-               --Rotate_Cntr : Integer;
+		   --Possibilities : Part_Ptr;
+		   --Pos_Cntr : Integer;
+		   --Rotate_Cntr : Integer;
        end record;
 
 end Part;

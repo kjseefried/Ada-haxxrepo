@@ -101,7 +101,7 @@ begin
 
     if contains(part,atom1) then
         put_line("fuck yea");
-   end if;
+	end if;
 
     if contains(part,atom6) then
         put_line("fuck yea2");

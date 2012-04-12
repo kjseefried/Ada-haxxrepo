@@ -10,14 +10,14 @@ package body Part is
     function Create_Part return Part_Ptr is
     begin
         return new Part_Type'(Size => 0,
-					Max_X => 0,
-					Max_Y => 0,
-					Max_Z => 0,
-                               Min_X => 0,
-					Min_Y => 0,
-					Min_Z => 0,
-					Data  => Get_Atom_Null_Ptr,
-					Next => null);
+							  Max_X => 0,
+							  Max_Y => 0,
+							  Max_Z => 0,
+							  Min_X => 0,
+							  Min_Y => 0,
+							  Min_Z => 0,
+							  Data  => Get_Atom_Null_Ptr,
+							  Next => null);
     end Create_Part;
 
 
@@ -87,7 +87,7 @@ package body Part is
     end Insert;
 
     function Contains (Part : in Part_Ptr; Atom : in Atom_Ptr)
-                return Boolean is
+					  return Boolean is
         temp_part : Part_Ptr := Part;
     begin
         loop
@@ -95,11 +95,11 @@ package body Part is
                 return true;
             end if;
 
-                        if Has_Next(temp_part) then
+			if Has_Next(temp_part) then
                 temp_part := Get_Next(temp_part);
             else
-              return false;
-                        end if;
+				return false;
+			end if;
 
         end loop;
     end Contains;
@@ -440,7 +440,7 @@ package body Part is
     procedure Free (Part : in out Part_Ptr) is
         procedure Free is
 			new Ada.Unchecked_Deallocation(Object => Part_Type,
-                                                 Name   => Part_Ptr);
+										   Name   => Part_Ptr);
     begin
         Free(Part);
         Part := null;

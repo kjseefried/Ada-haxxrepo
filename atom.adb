@@ -74,7 +74,7 @@ package body Atom is
 	---------------------------------------------------------------------------
 	procedure Set_Z(Atom : in Atom_Ptr; Z : in Integer) is
 	begin
-	   Atom.all.Z := Z;
+		Atom.all.Z := Z;
 	end Set_Z;
 
 
@@ -120,30 +120,30 @@ package body Atom is
 	procedure Put(Atom : in Atom_Ptr) is
 	begin
 
-           Put(Get_X(Atom),0);
-           Put(" ");
-           Put(Get_Y(Atom),0);
-           Put(" ");
-           Put(Get_Z(Atom),0);
-      end Put;
+		Put(Get_X(Atom),0);
+		Put(" ");
+		Put(Get_Y(Atom),0);
+		Put(" ");
+		Put(Get_Z(Atom),0);
+	end Put;
 
 
     ---------------------------------------------------------------------------
 	-- Put a list of atoms
 	---------------------------------------------------------------------------
 	procedure Put_All(Atom : in Atom_Ptr) is
-           Temp : Atom_Ptr := Atom;
+		Temp : Atom_Ptr := Atom;
 	begin
 
-           loop
-               Put(Temp);
-               New_Line;
-			   if not Has_Next(Temp) then
-				   return;
-			   end if;
-               Temp := Temp.all.Next;
-           end loop;
-       end Put_All;
+		loop
+			Put(Temp);
+			New_Line;
+			if not Has_Next(Temp) then
+				return;
+			end if;
+			Temp := Temp.all.Next;
+		end loop;
+	end Put_All;
 
     ---------------------------------------------------------------------------
     -- Deallocate the memory of an atom.
@@ -151,9 +151,9 @@ package body Atom is
     function "=" (Left,Right : in Atom_Ptr) return Boolean is
     begin
         return Get_X(Left) = Get_X(Right) and then
-                Get_Y(Left) = Get_Y(Right) and then
-                Get_Z(Left) = Get_Z(Right);
-     end "=";
+		  Get_Y(Left) = Get_Y(Right) and then
+		  Get_Z(Left) = Get_Z(Right);
+	end "=";
 
     ---------------------------------------------------------------------------
     -- Deallocate the memory of an atom.
