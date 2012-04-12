@@ -4,6 +4,9 @@ with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 
 package body Part is
 
+    ----------------------------------------------------------------------
+    -- Create an empty Part
+    ----------------------------------------------------------------------
     function Create_Part return Part_Ptr is
         Part : Part_Ptr;
     begin
@@ -17,6 +20,9 @@ package body Part is
     end Create_Part;
 
 
+    ----------------------------------------------------------------------
+    -- Insert an atom in a part, increment the size of the part
+    ----------------------------------------------------------------------
     procedure Insert (Part : in out Part_Ptr; Atom : in Atom_Ptr) is
         Temp1 : Atom_Ptr;
         Temp2 : Atom_Ptr;
@@ -79,71 +85,105 @@ package body Part is
         end loop;
     end Insert;
 
+    ----------------------------------------------------------------------
+    -- Checks if the part has a next element
+    ----------------------------------------------------------------------
 	function Has_Next (Part : in Part_Ptr) return Boolean is
 	begin
-		return Part.all.Next /= null;
+		return Get_Next(Part) /= null;
 	end Has_Next;
 
-
+    ----------------------------------------------------------------------
+    -- Returns the value of the parts "Next" field
+    ----------------------------------------------------------------------
 	function Get_Next (Part : in Part_Ptr) return Part_Ptr is
 	begin
 		return Part.all.Next;
 	end Get_Next;
 
-
+    ----------------------------------------------------------------------
+    -- Sets the parts "Next" field to Next
+    ----------------------------------------------------------------------
 	procedure Set_Next (Part : in Part_Ptr; Next : in Part_Ptr) is
 	begin
 		Part.all.Next := Next;
 	end Set_Next;
 
+    ----------------------------------------------------------------------
+    -- Returns the value of the parts "Data" field
+    ----------------------------------------------------------------------
     function Get_Data (Part : in Part_Ptr) return Atom_Ptr is
     begin
         return Part.All.Data;
     end Get_Data;
 
+    ----------------------------------------------------------------------
+    -- Sets the parts "Data" field to Atom
+    ----------------------------------------------------------------------
     procedure Set_Data (Part : in Part_Ptr; Atom : in Atom_Ptr) is
     begin
 		Part.all.Data := Atom;
     end Set_Data;
 
-
+    ----------------------------------------------------------------------
+    -- Returns the value of the parts "Max_X" field
+    ----------------------------------------------------------------------
     function Get_Max_X (Part : in Part_Ptr) return Integer is
     begin
         return Part.All.Max_X;
     end Get_Max_X;
 
+    ----------------------------------------------------------------------
+    -- Sets the parts "Max_X" field to Val
+    ----------------------------------------------------------------------
     procedure Set_Max_X (Part : in Part_Ptr; Val : in Integer) is
     begin
         Part.all.Max_X := Val;
     end Set_Max_X;
 
-
+    ----------------------------------------------------------------------
+    -- Returns the value of the parts "Max_Y" field
+    ----------------------------------------------------------------------
     function Get_Max_Y (Part : in Part_Ptr) return Integer is
     begin
         return Part.All.Max_Y;
     end Get_Max_Y;
 
+    ----------------------------------------------------------------------
+    -- Sets the parts "Max_Y" field to Val
+    ----------------------------------------------------------------------
     procedure Set_Max_Y (Part : in Part_Ptr; Val : in Integer) is
     begin
         Part.all.Max_Y := Val;
     end Set_Max_Y;
 
-
+    ----------------------------------------------------------------------
+    -- Returns the value of the parts "Max_Z" field
+    ----------------------------------------------------------------------
     function Get_Max_Z (Part : in Part_Ptr) return Integer is
     begin
         return Part.All.Max_Z;
     end Get_Max_Z;
 
+    ----------------------------------------------------------------------
+    -- Sets the parts "Max_Z" field to Val
+    ----------------------------------------------------------------------
     procedure Set_Max_Z (Part : in Part_Ptr; Val : in Integer) is
     begin
         Part.all.Max_Z := Val;
     end Set_Max_Z;
-	
+
+    ----------------------------------------------------------------------
+    -- Checks if the part pointer is null
+    ----------------------------------------------------------------------	
 	function Is_Null (Part : in Part_Ptr) return Boolean is
 	begin
 		return Part = null;
 	end Is_Null;
 
+    ----------------------------------------------------------------------
+    -- Checks if the size of the part is zero
+    ----------------------------------------------------------------------
     function Is_Empty (Part : in Part_Ptr) return Boolean is
     begin
         if Get_Size(Part) = 0 then
@@ -153,16 +193,25 @@ package body Part is
         end if;
     end Is_Empty;
 
+    ----------------------------------------------------------------------
+    -- Returns the size of the part
+    ----------------------------------------------------------------------
     function Get_Size (Part : in Part_Ptr) return Integer is
     begin
         return Part.All.Size;
     end Get_Size;
 
+    ----------------------------------------------------------------------
+    -- Sets the parts "Max_X" field to Val
+    ----------------------------------------------------------------------
     procedure Set_Size (Part : in Part_Ptr; Val : in Integer) is
     begin
         Part.all.Size := Val;
     end Set_Size;
-	
+
+    ----------------------------------------------------------------------
+    -- Prints all the atoms in the parts "Data" field
+    ----------------------------------------------------------------------	
 	procedure Put_All (Part : in Part_Ptr) is
 		Temp_Part : Part_Ptr := Part;
 	begin
@@ -176,17 +225,79 @@ package body Part is
 		end loop;
 	end Put_All;
 
+
+    ----------------------------------------------------------------------
+    -- Prints one atom in the parts "Data" field
+    ----------------------------------------------------------------------
     procedure Put (Part : in Part_Ptr) is
     begin
         Put_All(Get_Data(Part));
     end Put;
 
-    procedure Free (Part : in out Part_Ptr) is
+    ----------------------------------------------------------------------
+    -- Rotates the whole part around the z-axis, modifies the Max fields
+    ----------------------------------------------------------------------
+    procedure Rotate_Z(Part : in Part_Ptr) is
+        temp_atom : Atom_Ptr := Get_Data(Part);
+        temp_max_x : constant Integer := -1 * Get_Max_X(Part);
+        temp_part_x : Integer;
+    begin
+        Set_Max_X(Part,Get_Max_Y(Part));
+        Set_Max_Y(Part,temp_max_x);
 
+        while not Is_Empty(temp_atom) loop
+            temp_part_x := -1 * Get_X(temp_atom);
+            Set_X(temp_atom,Get_Y(temp_atom));
+            Set_Y(temp_atom,temp_part_x);
+            temp_atom := Get_Next(temp_atom);
+        end loop;
+    end Rotate_Z;
+
+    ----------------------------------------------------------------------
+    -- Rotates the whole part around the x-axis, modifies the Max fields
+    ----------------------------------------------------------------------
+    procedure Rotate_X(Part : in Part_Ptr) is
+        temp_atom : Atom_Ptr := Get_Data(Part);
+        temp_max_z : constant Integer := -1 * Get_Max_Z(Part);
+        temp_part_z : Integer;
+    begin
+        Set_Max_Z(Part,Get_Max_Y(Part));
+        Set_Max_Y(Part,temp_max_z);
+
+        while not Is_Empty(temp_atom) loop
+            temp_part_z := -1 * Get_Z(temp_atom);
+            Set_Z(temp_atom,Get_Y(temp_atom));
+            Set_Y(temp_atom,temp_part_z);
+            temp_atom := Get_Next(temp_atom);
+        end loop;
+    end Rotate_X;
+
+    ----------------------------------------------------------------------
+    -- Rotates the whole part around the y-axis, modifies the Max fields
+    ----------------------------------------------------------------------
+    procedure Rotate_Y(Part : in Part_Ptr) is
+        temp_atom : Atom_Ptr := Get_Data(Part);
+        temp_max_x : constant Integer := -1 * Get_Max_X(Part);
+        temp_part_x : Integer;
+    begin
+        Set_Max_X(Part,Get_Max_Z(Part));
+        Set_Max_Z(Part,temp_max_x);
+
+        while not Is_Empty(temp_atom) loop
+            temp_part_x := -1 * Get_X(temp_atom);
+            Set_X(temp_atom,Get_Z(temp_atom));
+            Set_Z(temp_atom,temp_part_x);
+            temp_atom := Get_Next(temp_atom);
+        end loop;
+    end Rotate_Y;
+
+    ----------------------------------------------------------------------
+    -- Removes a part, unallocates memory
+    ----------------------------------------------------------------------
+    procedure Free (Part : in out Part_Ptr) is
         procedure Free is
-			new Ada.Unchecked_Deallocation(
-										   Object => Part_Type,
-										   Name   => Part_Ptr);
+			new Ada.Unchecked_Deallocation(Object => Part_Type,
+                                                 Name   => Part_Ptr);
     begin
         Free(Part);
         Part := null;

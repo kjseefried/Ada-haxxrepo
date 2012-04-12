@@ -122,9 +122,7 @@ package body Atom is
                New_Line;
                temp := temp.all.Next;
            end loop;
-       end Put_All;
-	   
-	   
+       end Put_All; 
 	---------------------------------------------------------------------------
 	-- Deallocate the memory of an atom.
 	---------------------------------------------------------------------------
