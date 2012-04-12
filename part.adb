@@ -175,7 +175,7 @@ package body Part is
 
     ----------------------------------------------------------------------
     -- Checks if the part pointer is null
-    ----------------------------------------------------------------------	
+    ----------------------------------------------------------------------
 	function Is_Null (Part : in Part_Ptr) return Boolean is
 	begin
 		return Part = null;
@@ -211,7 +211,7 @@ package body Part is
 
     ----------------------------------------------------------------------
     -- Prints all the atoms in the parts "Data" field
-    ----------------------------------------------------------------------	
+    ----------------------------------------------------------------------
 	procedure Put_All (Part : in Part_Ptr) is
 		Temp_Part : Part_Ptr := Part;
 	begin
