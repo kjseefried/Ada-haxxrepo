@@ -290,7 +290,56 @@ package body Part is
             temp_atom := Get_Next(temp_atom);
         end loop;
     end Rotate_Y;
-
+	
+    ----------------------------------------------------------------------
+    -- Rotates the whole part around the y-axis, modifies the Max fields
+    ----------------------------------------------------------------------	
+	procedure Move_X (Part : in Part_Ptr; Value : in Integer) is
+		Temp_Atom : Atom_Ptr := Get_Data(Part);
+		Temp_X : Integer;
+	begin
+		Set_Max_X(Part, Get_Max_X(Part) + Value);
+		
+        while not Is_Empty(Temp_Atom) loop
+			Temp_X := Get_X(Temp_Atom);
+			Set_X(Temp_Atom, Get_X(Temp_Atom) + Value);
+			Temp_Atom := Get_Next(Temp_Atom);
+        end loop;		
+	end Move_X;
+	
+	----------------------------------------------------------------------
+    -- Rotates the whole part around the y-axis, modifies the Max fields
+    ----------------------------------------------------------------------
+	procedure Move_Y (Part : in Part_Ptr; Value : in Integer) is
+		Temp_Atom : Atom_Ptr := Get_Data(Part);
+		Temp_Y : Integer;
+	begin
+		Set_Max_Y(Part, Get_Max_Y(Part) + Value);
+		
+        while not Is_Empty(Temp_Atom) loop
+			Temp_Y := Get_Y(Temp_Atom);
+			Set_Y(Temp_Atom, Get_Y(Temp_Atom) + Value);
+			Temp_Atom := Get_Next(Temp_Atom);
+        end loop;
+	end Move_Y;
+	
+	----------------------------------------------------------------------
+    -- Rotates the whole part around the y-axis, modifies the Max fields
+    ----------------------------------------------------------------------
+	procedure Move_Z (Part : in Part_Ptr; Value : in Integer) is
+		Temp_Atom : Atom_Ptr := Get_Data(Part);
+		Temp_Z : Integer;
+	begin
+		Set_Max_Z(Part, Get_Max_Z(Part) + Value);
+		
+        while not Is_Empty(Temp_Atom) loop
+			Temp_Z := Get_Z(Temp_Atom);
+			Set_Z(Temp_Atom, Get_Z(Temp_Atom) + Value);
+			Temp_Atom := Get_Next(Temp_Atom);
+        end loop;		
+	end Move_Z;
+	
+	
     ----------------------------------------------------------------------
     -- Removes a part, unallocates memory
     ----------------------------------------------------------------------
