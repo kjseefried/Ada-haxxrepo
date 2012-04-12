@@ -17,10 +17,12 @@ package Part is
     function Get_Max_Z (Part : in Part_Ptr) return Integer;
 
     function Is_Empty (Part : in Part_Ptr) return Boolean;
-
     function Get_Size (Part : in Part_Ptr) return Integer;
+	function Has_Next (Part : in Part_Ptr) return Boolean;
+	function Get_Next (Part : in Part_Ptr) return Part_Ptr;
 
     procedure Put (Part : in Part_Ptr);
+	procedure Set_Next (Part : in Part_Ptr; Next : in Part_Ptr);
 
     procedure Free_Part (Part : in out Part_Ptr);
 
@@ -29,10 +31,11 @@ private
     type Part_Type is
        record
            Data : Atom_Ptr;
-          Size  : Integer;
-          Max_X : Integer;
-          Max_Y : Integer;
-          Max_Z : Integer;
+		   Size  : Integer;
+		   Max_X : Integer;
+		   Max_Y : Integer;
+		   Max_Z : Integer;
+		   Next  : Part_Ptr;
        end record;
 
 end Part;
