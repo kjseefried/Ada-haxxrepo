@@ -2,9 +2,8 @@ with Atom; use Atom;
 
 package Part is
 
-
-	type Part_Ptr is private;
-	type Part_Type is private;
+    type Part_Ptr is private;
+    type Part_Type is private;
 
     function Create_Part return Part_Ptr;
 
@@ -40,20 +39,12 @@ private
     type Part_Ptr is access Part_Type;
     type Part_Type is
        record
-<<<<<<< HEAD
-          Data : Atom_Ptr;
-          Size  : Integer;
-          Max_X : Integer;
-          Max_Y : Integer;
-          Max_Z : Integer;
-=======
            Data : Atom_Ptr;
 		   Size  : Integer;
 		   Max_X : Integer;
 		   Max_Y : Integer;
 		   Max_Z : Integer;
 		   Next  : Part_Ptr;
->>>>>>> github/master
        end record;
 
 end Part;
