@@ -28,9 +28,9 @@ begin
 
     Insert(Part, Atom1);
     Insert(Part, Atom2);
-    --Insert(Part, Atom3);
-    --Insert(Part, Atom4);
-    --Insert(Part, Atom5);
+    Insert(Part, Atom3);
+    Insert(Part, Atom4);
+    Insert(Part, Atom5);
 
 	
     Put(Part);
