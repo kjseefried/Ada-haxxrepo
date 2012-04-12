@@ -1,6 +1,6 @@
 with Ada.Unchecked_Deallocation;
 with Ada.Text_IO; use Ada.Text_IO;
-with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
+
 
 package body Part is
 
@@ -8,20 +8,16 @@ package body Part is
     -- Create an empty Part
     ----------------------------------------------------------------------
     function Create_Part return Part_Ptr is
-        Part : Part_Ptr;
     begin
-        Part := new Part_Type;
-        Part.All.Size  := 0;
-        Part.All.Max_X := 0;
-        Part.All.Max_Y := 0;
-        Part.All.Max_Z := 0;
-
         return new Part_Type'(Size => 0,
-							  Max_X => 0,
-							  Max_Y => 0,
-							  Max_Z => 0,
-							  Data  => Get_Atom_Null_Ptr,
-							  Next => null);
+					Max_X => 0,
+					Max_Y => 0,
+					Max_Z => 0,
+                               Min_X => 0,
+					Min_Y => 0,
+					Min_Z => 0,
+					Data  => Get_Atom_Null_Ptr,
+					Next => null);
     end Create_Part;
 
 
@@ -89,6 +85,24 @@ package body Part is
 			Temp1 := Get_Next(Temp1);
         end loop;
     end Insert;
+
+    function Contains (Part : in Part_Ptr; Atom : in Atom_Ptr)
+                return Boolean is
+        temp_part : Part_Ptr := Part;
+    begin
+        loop
+            if Atom = Get_Data(temp_part) then
+                return true;
+            end if;
+
+                        if Has_Next(temp_part) then
+                temp_part := Get_Next(temp_part);
+            else
+              return false;
+                        end if;
+
+        end loop;
+    end Contains;
 
     ----------------------------------------------------------------------
     -- Checks if the part has a next element
@@ -179,6 +193,67 @@ package body Part is
     end Set_Max_Z;
 
     ----------------------------------------------------------------------
+    -- Returns the value of the parts "Min_X" field
+    ----------------------------------------------------------------------
+    function Get_Min_X (Part : in Part_Ptr) return Integer is
+    begin
+        return Part.All.Min_X;
+    end Get_Min_X;
+
+    ----------------------------------------------------------------------
+    -- Sets the parts "Min_X" field to Val
+    ----------------------------------------------------------------------
+    procedure Set_Min_X (Part : in Part_Ptr; Val : in Integer) is
+    begin
+        Part.all.Min_X := Val;
+    end Set_Min_X;
+
+    ----------------------------------------------------------------------
+    -- Returns the value of the parts "Min_Y" field
+    ----------------------------------------------------------------------
+    function Get_Min_Y (Part : in Part_Ptr) return Integer is
+    begin
+        return Part.All.Min_Y;
+    end Get_Min_Y;
+
+    ----------------------------------------------------------------------
+    -- Sets the parts "Min_Y" field to Val
+    ----------------------------------------------------------------------
+    procedure Set_Min_Y (Part : in Part_Ptr; Val : in Integer) is
+    begin
+        Part.all.Min_Y := Val;
+    end Set_Min_Y;
+
+    ----------------------------------------------------------------------
+    -- Returns the value of the parts "Min_Z" field
+    ----------------------------------------------------------------------
+    function Get_Min_Z (Part : in Part_Ptr) return Integer is
+    begin
+        return Part.All.Min_Z;
+    end Get_Min_Z;
+
+    ----------------------------------------------------------------------
+    -- Sets the parts "Min_Z" field to Val
+    ----------------------------------------------------------------------
+    procedure Set_Min_Z (Part : in Part_Ptr; Val : in Integer) is
+    begin
+        Part.all.Min_Z := Val;
+    end Set_Min_Z;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ----------------------------------------------------------------------
     -- Checks if the part pointer is null
     ----------------------------------------------------------------------
 	function Is_Null (Part : in Part_Ptr) return Boolean is
@@ -221,7 +296,7 @@ package body Part is
 		Temp_Part : Part_Ptr := Part;
 	begin
 		loop
-			
+
 			Put_All(Get_Data(Temp_Part));
 			Put_Line("-------------------");
 			if not Has_Next(Temp_Part) then
@@ -306,37 +381,33 @@ package body Part is
             temp_atom := Get_Next(temp_atom);
         end loop;
     end Rotate_Y;
-	
+
     ----------------------------------------------------------------------
     -- Rotates the whole part around the y-axis, modifies the Max fields
-    ----------------------------------------------------------------------	
+    ----------------------------------------------------------------------
 	procedure Move_X (Part : in Part_Ptr; Value : in Integer) is
 		Temp_Atom : Atom_Ptr := Get_Data(Part);
-		Temp_X : Integer;
 	begin
 		Set_Max_X(Part, Get_Max_X(Part) + Value);
-		
+
         loop
-			Temp_X := Get_X(Temp_Atom);
 			Set_X(Temp_Atom, Get_X(Temp_Atom) + Value);
 			if not Has_Next(Temp_Atom) then
 				return;
 			end if;
 			Temp_Atom := Get_Next(Temp_Atom);
-        end loop;		
+        end loop;
 	end Move_X;
-	
+
 	----------------------------------------------------------------------
     -- Rotates the whole part around the y-axis, modifies the Max fields
     ----------------------------------------------------------------------
 	procedure Move_Y (Part : in Part_Ptr; Value : in Integer) is
 		Temp_Atom : Atom_Ptr := Get_Data(Part);
-		Temp_Y : Integer;
 	begin
 		Set_Max_Y(Part, Get_Max_Y(Part) + Value);
-		
+
         loop
-			Temp_Y := Get_Y(Temp_Atom);
 			Set_Y(Temp_Atom, Get_Y(Temp_Atom) + Value);
 			if not Has_Next(Temp_Atom) then
 				return;
@@ -344,27 +415,25 @@ package body Part is
 			Temp_Atom := Get_Next(Temp_Atom);
         end loop;
 	end Move_Y;
-	
+
 	----------------------------------------------------------------------
     -- Rotates the whole part around the y-axis, modifies the Max fields
     ----------------------------------------------------------------------
 	procedure Move_Z (Part : in Part_Ptr; Value : in Integer) is
 		Temp_Atom : Atom_Ptr := Get_Data(Part);
-		Temp_Z : Integer;
 	begin
 		Set_Max_Z(Part, Get_Max_Z(Part) + Value);
-		
+
         loop
-			Temp_Z := Get_Z(Temp_Atom);
 			Set_Z(Temp_Atom, Get_Z(Temp_Atom) + Value);
 			if not Has_Next(Temp_Atom) then
 				return;
 			end if;
 			Temp_Atom := Get_Next(Temp_Atom);
-        end loop;		
+        end loop;
 	end Move_Z;
-	
-	
+
+
     ----------------------------------------------------------------------
     -- Removes a part, unallocates memory
     ----------------------------------------------------------------------
