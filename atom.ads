@@ -20,7 +20,7 @@ package Atom is
    procedure Put(Atom : in Atom_Ptr);
     procedure Put_All(Atom : in Atom_Ptr);
 
-   procedure Free_Atom(Atom : in out Atom_Ptr);
+   procedure Free(Atom : in out Atom_Ptr);
 
 private
    type Atom_Ptr is access Atom_Type;

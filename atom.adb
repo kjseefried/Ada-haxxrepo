@@ -83,12 +83,12 @@ package body Atom is
            end loop;
        end Put_All;
 
-	procedure Free_Atom(Atom : in out Atom_Ptr) is
+	procedure Free(Atom : in out Atom_Ptr) is
 		procedure Free is
 			new Ada.Unchecked_Deallocation(Object => Atom_Type,
 										   Name => Atom_Ptr);
 	begin
 		Free(Atom);
 		Atom := null;
-	end Free_Atom;
+	end Free;
 end Atom;

@@ -31,7 +31,11 @@ package Part is
 
 
     procedure Put (Part : in Part_Ptr);
-	procedure Set_Next (Part : in Part_Ptr; Next : in Part_Ptr);
+    procedure Set_Next (Part : in Part_Ptr; Next : in Part_Ptr);
+
+    procedure Rotate_Z(Part : in Part_Ptr);
+    procedure Rotate_X(Part : in Part_Ptr);
+    procedure Rotate_Y(Part : in Part_Ptr);
 
     procedure Free_Part (Part : in out Part_Ptr);
 
@@ -39,7 +43,7 @@ private
     type Part_Ptr is access Part_Type;
     type Part_Type is
        record
-           Data : Atom_Ptr;
+               Data : Atom_Ptr;
 		   Size  : Integer;
 		   Max_X : Integer;
 		   Max_Y : Integer;
