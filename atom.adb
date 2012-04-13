@@ -15,7 +15,7 @@ package body Atom is
 							  Y => Y,
 							  Z => Z);
 	end Create_Atom;
-	
+
 	---------------------------------------------------------------------------
 	-- Copy of an atom
 	---------------------------------------------------------------------------
@@ -27,13 +27,13 @@ package body Atom is
 							  Y        => Get_Y(Atom),
 							  Z        => Get_Z(Atom));
 	end Copy;
-	
-	
+
+
 	---------------------------------------------------------------------------
 	-- Returns a null Atom_Ptr
 	---------------------------------------------------------------------------
 	function Get_Atom_Null_Ptr return Atom_Ptr is
-		Atom : Atom_Ptr := null;
+		Atom : constant Atom_Ptr := null;
 	begin
 		return Atom;
 	end Get_Atom_Null_Ptr;
@@ -98,7 +98,7 @@ package body Atom is
 	begin
 		return Atom.all.Next;
 	end Get_Next;
-	
+
 	---------------------------------------------------------------------------
 	-- Get the next Atom in the list.
 	---------------------------------------------------------------------------
@@ -116,16 +116,6 @@ package body Atom is
 		Atom.all.Has_Next := True;
 		Atom.all.Next := Next;
 	end Set_Next;
-
-
-	---------------------------------------------------------------------------
-	-- Checks if the given Atom_Ptr is null
-	---------------------------------------------------------------------------
-	function Is_Empty (Atom : in Atom_Ptr) return Boolean is
-	begin
-		return Atom = null;
-	end Is_Empty;
-
 
     ---------------------------------------------------------------------------
 	-- Put an atom
@@ -179,7 +169,7 @@ package body Atom is
 		Free(Atom);
 		Atom := null;
 	end Free;
-	
+
    ---------------------------------------------------------------------------
     -- Deallocate the memory of an atom list.
     ---------------------------------------------------------------------------
@@ -201,5 +191,5 @@ package body Atom is
 			Free_List(Tmp_Pointer);
 		end if;
 	end Free_List;
-	
+
 end Atom;

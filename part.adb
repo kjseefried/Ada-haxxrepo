@@ -167,8 +167,29 @@ package body Part is
         end loop;
     end Contains;
 
-
 	---------------------------------------------------------------------------
+	-- Check if a Dest part contains Src part
+	---------------------------------------------------------------------------
+      function Contains (Dest,Src : in Part_Ptr) return Boolean is
+          temp_dest : Atom_Ptr := Get_Data(Dest);
+          temp_src : Atom_Ptr := Get_Data(Src);
+      begin
+          if Get_Size(Dest) >= Get_Size(Src) then
+              loop
+                  if temp_dest /= temp_src then
+                      return false;
+                  end if;
+                  temp_dest := Get_Next(temp_dest);
+                  temp_src := Get_Next(temp_src);
+              exit when not Has_Next(temp_src);
+              end loop;
+              return true;
+          else
+              return false;
+          end if;
+      end Contains;
+
+      	---------------------------------------------------------------------------
 	-- Step forward
 	---------------------------------------------------------------------------
 	function Step_Forward(Part : in Part_Ptr, Figure : in Part_Ptr) 
