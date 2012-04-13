@@ -1,6 +1,7 @@
 with Ada.Unchecked_Deallocation;
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
+with Ada.Float_Text_IO; use Ada.Float_Text_IO;
 
 package body Part is
 
@@ -117,12 +118,14 @@ package body Part is
 		Offset_Y : Integer;
 		Offset_Z : Integer;
 	begin
+
 		Offset_X := Get_X(To) - Get_X(Get_Data(Part));
 		Offset_Y := Get_Y(To) - Get_Y(Get_Data(Part));
 		Offset_Z := Get_Z(To) - Get_Z(Get_Data(Part));
 		Move_X(Part, Offset_X);
 		Move_Y(Part, Offset_Y);
 		Move_Z(Part, Offset_Z);
+		
 	end Move_To;
 	
 	---------------------------------------------------------------------------
@@ -171,17 +174,17 @@ package body Part is
 	-- Check if a Dest part contains Src part
 	---------------------------------------------------------------------------
       function Contains (Dest,Src : in Part_Ptr) return Boolean is
-          temp_dest : Atom_Ptr := Get_Data(Dest);
           temp_src : Atom_Ptr := Get_Data(Src);
       begin
           if Get_Size(Dest) >= Get_Size(Src) then
               loop
-                  if temp_dest /= temp_src then
+				  
+                  if not Contains(Dest, Temp_Src)  then
                       return false;
                   end if;
-                  temp_dest := Get_Next(temp_dest);
+				  
+				  exit when not Has_Next(temp_src);
                   temp_src := Get_Next(temp_src);
-              exit when not Has_Next(temp_src);
               end loop;
               return true;
           else
@@ -189,21 +192,20 @@ package body Part is
           end if;
       end Contains;
 
-      	---------------------------------------------------------------------------
+    ---------------------------------------------------------------------------
 	-- Step forward
 	---------------------------------------------------------------------------
-	function Step_Forward(Part : in Part_Ptr, Figure : in Part_Ptr) 
+	function Step_Forward(Part : in Part_Ptr; Figure : in Part_Ptr) 
 						 return Boolean is
 		No_Poss_List : exception;
-		Tmp_Atom : Atom;
+		Tmp_Atom : Atom_Ptr;
 	begin
 		if Get_Poss_List(Part) = null then
 			raise No_Poss_List;
 		end if;
 
 		loop
-			if Get_Poss_Cntr(Part) = Get_Size(Get_Poss_List(Part)) then
-
+			if Get_Poss_Cntr(Part) >= Get_Size(Get_Poss_List(Part)) then
 				if Get_Rot_Cntr(Part) = 64 then
 					return False;
 				end if;
@@ -211,37 +213,30 @@ package body Part is
 				Part.Poss_Cntr := 0;
 				Reverse_Rotations(Part);
 
-				Set_Rot_Cntr(Part, Get_Rot_Cntr(Part) + 1);
-				for L in 0..Get_Rot_Cntr(Part) loop
+				
+				for L in 0..(Get_Rot_Cntr(Part) mod 4) loop
 					Rotate_X(Part);
 				end loop;
-				
-				for L in 0..Get_Rot_Cntr(Part) loop
-					if Counter mod 4 = 0 and Counter /= 0 then
-						Rotate_Y(Part);
-					end if;
+				for L in 0..((Get_Rot_Cntr(Part)/4) mod 4) loop
+					Rotate_Y(Part);
+				end loop;
+				for L in 0..(Get_Rot_Cntr(Part)/16) loop
+					Rotate_Z(Part);
 				end loop;
 				
-				for L in 0..Get_Rot_Cntr(Part) loop
-					if Counter mod 16 = 0 and Counter /= 0 then
-						Rotate_Z(Part);
-					end if;
-				end loop;
-
+				Set_Rot_Cntr(Part, Get_Rot_Cntr(Part) + 1);
 			end if;
-			
-			Tmp_Atom := Get_Data(Part);
-			for L in 0..Get_Poss_Cntr(Part) loop
+			Tmp_Atom := Get_Data(Get_Poss_List(Part));
+			for L in 1..Get_Poss_Cntr(Part) loop
 				Tmp_Atom := Get_Next(Tmp_Atom);
 			end loop;
-			
 			Move_To(Part, Tmp_Atom);
-			
 			if Contains(Figure, Part) then
-				Put("JESS!");
+				Part.Poss_Cntr := Part.Poss_Cntr + 1;
 				return True;
 			end if;
-			
+
+
 			Part.Poss_Cntr := Part.Poss_Cntr + 1;
 		end loop;
 	end Step_Forward;
@@ -285,6 +280,14 @@ package body Part is
 		return Part.all.Rot_Cntr;
 	end Get_Rot_Cntr;
 
+    ----------------------------------------------------------------------
+    -- Returns the value of the parts "Poss_Cntr" field
+    ----------------------------------------------------------------------
+	function Get_Poss_Cntr (Part : in Part_Ptr) return Integer is
+	begin
+		return Part.all.Poss_Cntr;
+	end Get_Poss_Cntr;
+	
     ----------------------------------------------------------------------
     -- Sets the parts "Rot_Cntr" field to Val
     ----------------------------------------------------------------------
@@ -550,6 +553,10 @@ package body Part is
                 Rotate_X(Part);
             end loop;
         end if;
+	
+		Set_Rot_Y(Part, 0);
+		Set_Rot_X(Part, 0);
+		Set_Rot_Z(Part, 0);
     end Reverse_Rotations;
 
     ----------------------------------------------------------------------

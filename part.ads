@@ -19,7 +19,8 @@ package Part is
     function Get_Rot_Y (Part : in Part_Ptr) return Integer;
 	function Get_Rot_Z (Part : in Part_Ptr) return Integer;
 	function Get_Rot_Cntr (Part : in Part_Ptr) return Integer;
-
+	function Get_Poss_Cntr (Part : in Part_Ptr) return Integer;
+	
 	function Get_Move_X (Part : in Part_Ptr) return Integer;
     function Get_Move_Y (Part : in Part_Ptr) return Integer;
 	function Get_Move_Z (Part : in Part_Ptr) return Integer;

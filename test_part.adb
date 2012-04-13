@@ -8,50 +8,94 @@ with Figure; use Figure;
 
 procedure Test_Part is
 
-    Part, Part2, Part3, Part4  : Part_Ptr;
+    Part1, Part2  : Part_Ptr;
+	
     Atom1,
     Atom2,
     Atom3,
     Atom4,
     Atom5,
     Atom6,
-	Orig_Atom: Atom_Ptr;
-	Figure : Figure_Ptr := Create_Figure;
+	Atom7,
+	Atom8,
+	Atom9,
+	Atom10 : Atom_Ptr;
 	
-	Counter : Integer := 1;
+	Atom11,
+    Atom12,
+    Atom13,
+    Atom14,
+    Atom15 : Atom_Ptr;
+	
+	Figure1, Figure2 : Figure_Ptr := Create_Figure;
+	
+	Counter : Integer := 0;
 begin
 	
 	
-	
-	-- Exclude--
     Atom1 := Create_Atom(1,1,1);
-    Atom2 := Create_Atom(2,2,2);
-    Atom3 := Create_Atom(3,3,3);
+    Atom2 := Create_Atom(2,1,1);
+    Atom3 := Create_Atom(3,1,1);
+    Atom4 := Create_Atom(1,1,2);
+    Atom5 := Create_Atom(1,1,3);
+    Atom6 := Create_Atom(1,2,3);	
+	Atom7 := Create_Atom(2,2,3);
+	Atom8 := Create_Atom(3,2,3);
+	Atom9 := Create_Atom(2,3,3);
+	Atom10 := Create_Atom(3,3,3);
+
+    Atom11 := Create_Atom(5,1,1);
+    Atom12 := Create_Atom(6,1,1);
+    Atom13 := Create_Atom(6,2,1);
+    Atom14 := Create_Atom(7,2,1);
+    --Atom15 := Create_Atom(1,1,1);	
 	
-    Atom4 := Create_Atom(1,1,1);
-    Atom5 := Create_Atom(2,2,2);
-    Atom6 := Create_Atom(3,3,3);	
-	
-	Part := Create_Part;
-	Insert(Part, Atom1);
-	Insert(Part, Atom2);
-	--Insert(Part, Atom3);
+	Part1 := Create_Part;
+	Insert(Part1, Atom1);
+	Insert(Part1, Atom2);
+	Insert(Part1, Atom3);
+	Insert(Part1, Atom4);
+	Insert(Part1, Atom5);
+	Insert(Part1, Atom6);
+	Insert(Part1, Atom7);
+	Insert(Part1, Atom8);
+	Insert(Part1, Atom9);
+	Insert(Part1, Atom10);
 	
 	Part2 := Create_Part;
-	Insert(Part2, Atom4);
-	Insert(Part2, Atom5);
-	Insert(Part2, Atom6);
-
-	Insert(Figure, Part);
-	Insert(Figure, Part2);
+	Insert(Part2, Atom11);
+	Insert(Part2, Atom12);
+	Insert(Part2, Atom13);
+	Insert(Part2, Atom14);
+	--Insert(Part2, Atom15);	
 	
-	if Contains(Part2, Part) then
-		Put("Japp");
-	else
-		Put("Nopp");
-	end if;
+	Insert(Figure1, Part1);
+	Insert(Figure2, Part2);
+	
 
+	Set_Poss_List(Part2, Part1);
 
+	while Step_Forward(Part2, Part1) loop
+		Put_Line("Success");
+		Counter := Counter + 1;
+		Put("X: ");
+		Put(Get_Rot_X(Part2));New_Line;
+		Put("Y: "); 
+		Put(Get_Rot_Y(Part2));New_Line;	
+		Put("Z: "); 
+		Put(Get_Rot_Z(Part2));New_Line(2);
+		
+		Put("Move_X: ");
+		Put(Get_Move_X(Part2));New_Line;	
+		Put("Move_Y: ");
+		Put(Get_Move_Y(Part2));New_Line;
+		Put("Move_Z: ");
+		Put(Get_Move_Z(Part2));New_Line;	
+	end loop;
+	Put_Line("Fail");
+	Put(Counter);
+
+	
 	--  Reverse_Rotations(Part);
 	--  Put(Part);
 	--  for L in Counter..50000000 loop
