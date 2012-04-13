@@ -10,16 +10,37 @@ package body Part is
     function Create_Part return Part_Ptr is
     begin
         return new Part_Type'(Size => 0,
-							  Max_X => 0,
-							  Max_Y => 0,
-							  Max_Z => 0,
-							  Min_X => 0,
-							  Min_Y => 0,
-							  Min_Z => 0,
 							  Data  => Get_Atom_Null_Ptr,
-							  Next => null);
+							  Next => null,							  
+							  Rot_X => 0,
+							  Rot_Y => 0,
+							  Rot_Z => 0,
+							  Rot_Cntr => 0,
+							  Move_X => 0,
+							  Move_Y => 0,
+							  Move_Z => 0,
+							  Poss_List => null,
+							  Poss_Cntr => 0);
     end Create_Part;
-
+	
+	-----------------------------------------------------------------------
+	-- Copy a part
+	-----------------------------------------------------------------------
+	function Copy (Part : in Part_Ptr) return Part_Ptr is
+	begin
+		return new Part_Type'(Size  => 0,
+							  Data  => Get_Atom_Null_Ptr,
+							  Next  => null,
+							  Rot_X => Get_Rot_X(Part),
+							  Rot_Y => Get_Rot_Y(Part),
+							  Rot_Z => Get_Rot_Z(Part),
+							  Rot_Cntr => Part.all.Rot_Cntr,
+							  Move_X => Get_Move_X(Part),
+							  Move_Y => Get_Move_Y(Part),
+							  Move_Z => Get_Move_Z(Part),
+							  Poss_List => null,
+							  Poss_Cntr => 0);
+	end Copy;
 
     ----------------------------------------------------------------------
     -- Insert an atom in a part, increment the size of the part
@@ -37,17 +58,6 @@ package body Part is
 
 		Set_Size(Part, Get_Size(Part) + 1);
 
-		if Get_X(Atom) > Get_Max_X(Part) then
-			Set_Max_X(Part, Get_X(Atom));
-		end if;
-
-		if Get_Y(Atom) > Get_Max_Y(Part) then
-			Set_Max_Y(Part, Get_Y(Atom));
-		end if;
-
-		if Get_Z(Atom) > Get_Max_Z(Part) then
-			Set_Max_Z(Part, Get_Z(Atom));
-		end if;
 
 
         if Is_Empty(Part) then
@@ -85,25 +95,87 @@ package body Part is
 			Temp1 := Get_Next(Temp1);
         end loop;
     end Insert;
-
+	
+	---------------------------------------------------------------------------
+	-- Set a new Poss_List, free's the old one if any
+	---------------------------------------------------------------------------	
+	procedure Set_Poss_List (Part : in Part_Ptr; Poss : in Part_Ptr) is
+		
+	begin
+		if Part.all.Poss_List /= null then
+			Free_All(Part.all.Poss_List);
+		end if;
+		Part.all.Poss_Cntr := 0;
+		Part.all.Poss_List := Poss;
+	end Set_Poss_List;
+	
+	---------------------------------------------------------------------------
+	-- Copies all parts in ´List´ but excludes all parts that ´Part´ contains
+	---------------------------------------------------------------------------
+	function Exclude_Part (List : in Part_Ptr; Part : in Part_Ptr) 
+						  return Part_Ptr is
+		Tmp_Atom  : Atom_Ptr := Get_Data(List);
+		New_List  : Part_Ptr := Copy(List);
+	begin
+		loop
+			if not Contains(Part, Tmp_Atom) then
+				Insert(New_List, Copy(Tmp_Atom));
+			end if;
+			
+			if not Has_Next(Tmp_Atom) then
+				return New_List;
+			end if;
+			Tmp_Atom := Get_Next(Tmp_Atom);
+		end loop;
+	end Exclude_Part;
+	
+	---------------------------------------------------------------------------
+	-- Check if a part contains an atom
+	---------------------------------------------------------------------------
     function Contains (Part : in Part_Ptr; Atom : in Atom_Ptr)
 					  return Boolean is
-        temp_part : Part_Ptr := Part;
+        Temp_Atom : Atom_Ptr := Get_Data(Part);
     begin
         loop
-            if Atom = Get_Data(temp_part) then
+            if Atom = Temp_Atom then
                 return true;
             end if;
+			
+			if Has_Next(Temp_Atom) then
 
-			if Has_Next(temp_part) then
-                temp_part := Get_Next(temp_part);
+                Temp_Atom := Get_Next(Temp_Atom);
             else
 				return false;
 			end if;
 
         end loop;
     end Contains;
-
+	
+	
+	---------------------------------------------------------------------------
+	-- Step forward
+	---------------------------------------------------------------------------
+	function Step_Forward(Part : in Part_Ptr) return Boolean is
+		No_Poss_List : exception;
+	begin
+		if Get_Poss_List(Part) = null then
+			raise No_Poss_List;
+		end if;
+		
+		loop
+			if Part.Poss_Cntr = Get_Size(Get_Poss_List(Part)) then
+				-- Nollställ pos-counter och rotera
+				-- Retunera falskt om rotering failar
+			end if;
+		
+			Part.Poss_Cntr := Part.Poss_Cntr + 1;
+		
+			-- Flytta figuren så att Part befinner sig på Poss_List[Cntr]
+			-- Om passar, retunera True
+		end loop;
+	end Step_Forward;
+	
+	
     ----------------------------------------------------------------------
     -- Checks if the part has a next element
     ----------------------------------------------------------------------
@@ -111,7 +183,13 @@ package body Part is
 	begin
 		return Get_Next(Part) /= null;
 	end Has_Next;
-
+	
+	
+	function Get_Poss_List (Part : in Part_Ptr) return Part_Ptr is
+	begin
+		return Part.all.Poss_List;
+	end Get_Poss_List;
+	
     ----------------------------------------------------------------------
     -- Returns the value of the parts "Next" field
     ----------------------------------------------------------------------
@@ -147,112 +225,99 @@ package body Part is
     ----------------------------------------------------------------------
     -- Returns the value of the parts "Max_X" field
     ----------------------------------------------------------------------
-    function Get_Max_X (Part : in Part_Ptr) return Integer is
+    function Get_Rot_X (Part : in Part_Ptr) return Integer is
     begin
-        return Part.All.Max_X;
-    end Get_Max_X;
+        return Part.All.Rot_X;
+    end Get_Rot_X;
 
     ----------------------------------------------------------------------
-    -- Sets the parts "Max_X" field to Val
+    -- Sets the parts "Rot_X" field to Val
     ----------------------------------------------------------------------
-    procedure Set_Max_X (Part : in Part_Ptr; Val : in Integer) is
+    procedure Set_Rot_X (Part : in Part_Ptr; Val : in Integer) is
     begin
-        Part.all.Max_X := Val;
-    end Set_Max_X;
+        Part.all.Rot_X := Val;
+    end Set_Rot_X;
 
     ----------------------------------------------------------------------
-    -- Returns the value of the parts "Max_Y" field
+    -- Returns the value of the parts "Rot_Y" field
     ----------------------------------------------------------------------
-    function Get_Max_Y (Part : in Part_Ptr) return Integer is
+    function Get_Rot_Y (Part : in Part_Ptr) return Integer is
     begin
-        return Part.All.Max_Y;
-    end Get_Max_Y;
+        return Part.All.Rot_Y;
+    end Get_Rot_Y;
 
     ----------------------------------------------------------------------
-    -- Sets the parts "Max_Y" field to Val
+    -- Sets the parts "Rot_Y" field to Val
     ----------------------------------------------------------------------
-    procedure Set_Max_Y (Part : in Part_Ptr; Val : in Integer) is
+    procedure Set_Rot_Y (Part : in Part_Ptr; Val : in Integer) is
     begin
-        Part.all.Max_Y := Val;
-    end Set_Max_Y;
+        Part.all.Rot_Y := Val;
+    end Set_Rot_Y;
 
     ----------------------------------------------------------------------
-    -- Returns the value of the parts "Max_Z" field
+    -- Returns the value of the parts "Rot_Z" field
     ----------------------------------------------------------------------
-    function Get_Max_Z (Part : in Part_Ptr) return Integer is
+    function Get_Rot_Z (Part : in Part_Ptr) return Integer is
     begin
-        return Part.All.Max_Z;
-    end Get_Max_Z;
+        return Part.All.Rot_Z;
+    end Get_Rot_Z;
 
     ----------------------------------------------------------------------
-    -- Sets the parts "Max_Z" field to Val
+    -- Sets the parts "Rot_Z" field to Val
     ----------------------------------------------------------------------
-    procedure Set_Max_Z (Part : in Part_Ptr; Val : in Integer) is
+    procedure Set_Rot_Z (Part : in Part_Ptr; Val : in Integer) is
     begin
-        Part.all.Max_Z := Val;
-    end Set_Max_Z;
-
+        Part.all.Rot_Z := Val;
+    end Set_Rot_Z;
+	
     ----------------------------------------------------------------------
-    -- Returns the value of the parts "Min_X" field
+    -- Returns the value of the parts "Max_X" field
     ----------------------------------------------------------------------
-    function Get_Min_X (Part : in Part_Ptr) return Integer is
+    function Get_Move_X (Part : in Part_Ptr) return Integer is
     begin
-        return Part.All.Min_X;
-    end Get_Min_X;
+        return Part.All.Move_X;
+    end Get_Move_X;
 
     ----------------------------------------------------------------------
-    -- Sets the parts "Min_X" field to Val
+    -- Sets the parts "Move_X" field to Val
     ----------------------------------------------------------------------
-    procedure Set_Min_X (Part : in Part_Ptr; Val : in Integer) is
+    procedure Set_Move_X (Part : in Part_Ptr; Val : in Integer) is
     begin
-        Part.all.Min_X := Val;
-    end Set_Min_X;
+        Part.all.Move_X := Val;
+    end Set_Move_X;
 
     ----------------------------------------------------------------------
-    -- Returns the value of the parts "Min_Y" field
+    -- Returns the value of the parts "Move_Y" field
     ----------------------------------------------------------------------
-    function Get_Min_Y (Part : in Part_Ptr) return Integer is
+    function Get_Move_Y (Part : in Part_Ptr) return Integer is
     begin
-        return Part.All.Min_Y;
-    end Get_Min_Y;
+        return Part.All.Move_Y;
+    end Get_Move_Y;
 
     ----------------------------------------------------------------------
-    -- Sets the parts "Min_Y" field to Val
+    -- Sets the parts "Move_Y" field to Val
     ----------------------------------------------------------------------
-    procedure Set_Min_Y (Part : in Part_Ptr; Val : in Integer) is
+    procedure Set_Move_Y (Part : in Part_Ptr; Val : in Integer) is
     begin
-        Part.all.Min_Y := Val;
-    end Set_Min_Y;
+        Part.all.Move_Y := Val;
+    end Set_Move_Y;
 
     ----------------------------------------------------------------------
-    -- Returns the value of the parts "Min_Z" field
+    -- Returns the value of the parts "Move_Z" field
     ----------------------------------------------------------------------
-    function Get_Min_Z (Part : in Part_Ptr) return Integer is
+    function Get_Move_Z (Part : in Part_Ptr) return Integer is
     begin
-        return Part.All.Min_Z;
-    end Get_Min_Z;
+        return Part.All.Move_Z;
+    end Get_Move_Z;
 
     ----------------------------------------------------------------------
-    -- Sets the parts "Min_Z" field to Val
+    -- Sets the parts "Move_Z" field to Val
     ----------------------------------------------------------------------
-    procedure Set_Min_Z (Part : in Part_Ptr; Val : in Integer) is
+    procedure Set_Move_Z (Part : in Part_Ptr; Val : in Integer) is
     begin
-        Part.all.Min_Z := Val;
-    end Set_Min_Z;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        Part.all.Move_Z := Val;
+    end Set_Move_Z;
+	
     ----------------------------------------------------------------------
     -- Checks if the part pointer is null
     ----------------------------------------------------------------------
@@ -282,7 +347,7 @@ package body Part is
     end Get_Size;
 
     ----------------------------------------------------------------------
-    -- Sets the parts "Max_X" field to Val
+    -- Sets the parts size
     ----------------------------------------------------------------------
     procedure Set_Size (Part : in Part_Ptr; Val : in Integer) is
     begin
@@ -296,7 +361,6 @@ package body Part is
 		Temp_Part : Part_Ptr := Part;
 	begin
 		loop
-
 			Put_All(Get_Data(Temp_Part));
 			Put_Line("-------------------");
 			if not Has_Next(Temp_Part) then
@@ -312,21 +376,20 @@ package body Part is
     ----------------------------------------------------------------------
     procedure Put (Part : in Part_Ptr) is
     begin
-
-        Put_All(Get_Data(Part));
+		if Get_Size(Part) > 0 then
+			Put_All(Get_Data(Part));
+		end if;
     end Put;
 
     ----------------------------------------------------------------------
-    -- Rotates the whole part around the z-axis, modifies the Max fields
+    -- Rotates the whole part around the z-axis, modifies the Rot fields
     ----------------------------------------------------------------------
     procedure Rotate_Z(Part : in Part_Ptr) is
         temp_atom : Atom_Ptr := Get_Data(Part);
-        temp_max_x : constant Integer := -1 * Get_Max_X(Part);
         temp_part_x : Integer;
     begin
-        Set_Max_X(Part,Get_Max_Y(Part));
-        Set_Max_Y(Part,temp_max_x);
-
+		Set_Rot_Z(Part, Get_Rot_Z(Part) + 1);
+		
 		loop
             temp_part_x := -1 * Get_X(temp_atom);
             Set_X(temp_atom,Get_Y(temp_atom));
@@ -339,15 +402,13 @@ package body Part is
     end Rotate_Z;
 
     ----------------------------------------------------------------------
-    -- Rotates the whole part around the x-axis, modifies the Max fields
+    -- Rotates the whole part around the x-axis, modifies the Rot fields
     ----------------------------------------------------------------------
     procedure Rotate_X(Part : in Part_Ptr) is
         temp_atom : Atom_Ptr := Get_Data(Part);
-        temp_max_z : constant Integer := -1 * Get_Max_Z(Part);
         temp_part_z : Integer;
     begin
-        Set_Max_Z(Part,Get_Max_Y(Part));
-        Set_Max_Y(Part,temp_max_z);
+		Set_Rot_X(Part, Get_Rot_X(Part) + 1);
 
         loop
             temp_part_z := -1 * Get_Z(temp_atom);
@@ -361,15 +422,13 @@ package body Part is
     end Rotate_X;
 
     ----------------------------------------------------------------------
-    -- Rotates the whole part around the y-axis, modifies the Max fields
+    -- Rotates the whole part around the y-axis, modifies the Rot fields
     ----------------------------------------------------------------------
     procedure Rotate_Y(Part : in Part_Ptr) is
         temp_atom : Atom_Ptr := Get_Data(Part);
-        temp_max_x : constant Integer := -1 * Get_Max_X(Part);
         temp_part_x : Integer;
     begin
-        Set_Max_X(Part,Get_Max_Z(Part));
-        Set_Max_Z(Part,temp_max_x);
+		Set_Rot_Y(Part, Get_Rot_Y(Part) + 1);
 
         loop
             temp_part_x := -1 * Get_X(temp_atom);
@@ -383,12 +442,12 @@ package body Part is
     end Rotate_Y;
 
     ----------------------------------------------------------------------
-    -- Rotates the whole part around the y-axis, modifies the Max fields
+    -- Move the part
     ----------------------------------------------------------------------
 	procedure Move_X (Part : in Part_Ptr; Value : in Integer) is
 		Temp_Atom : Atom_Ptr := Get_Data(Part);
 	begin
-		Set_Max_X(Part, Get_Max_X(Part) + Value);
+		Set_Move_X(Part, Get_Move_X(Part) + Value);
 
         loop
 			Set_X(Temp_Atom, Get_X(Temp_Atom) + Value);
@@ -400,12 +459,12 @@ package body Part is
 	end Move_X;
 
 	----------------------------------------------------------------------
-    -- Rotates the whole part around the y-axis, modifies the Max fields
+    -- Move the part
     ----------------------------------------------------------------------
 	procedure Move_Y (Part : in Part_Ptr; Value : in Integer) is
 		Temp_Atom : Atom_Ptr := Get_Data(Part);
 	begin
-		Set_Max_Y(Part, Get_Max_Y(Part) + Value);
+		Set_Move_Y(Part, Get_Move_Y(Part) + Value);
 
         loop
 			Set_Y(Temp_Atom, Get_Y(Temp_Atom) + Value);
@@ -417,12 +476,12 @@ package body Part is
 	end Move_Y;
 
 	----------------------------------------------------------------------
-    -- Rotates the whole part around the y-axis, modifies the Max fields
+    -- Move the part
     ----------------------------------------------------------------------
 	procedure Move_Z (Part : in Part_Ptr; Value : in Integer) is
 		Temp_Atom : Atom_Ptr := Get_Data(Part);
 	begin
-		Set_Max_Z(Part, Get_Max_Z(Part) + Value);
+		Set_Move_Z(Part, Get_Move_Z(Part) + Value);
 
         loop
 			Set_Z(Temp_Atom, Get_Z(Temp_Atom) + Value);
@@ -435,7 +494,7 @@ package body Part is
 
 
     ----------------------------------------------------------------------
-    -- Removes a part, unallocates memory
+    -- Unallocates memory for a part
     ----------------------------------------------------------------------
     procedure Free (Part : in out Part_Ptr) is
         procedure Free is
@@ -445,5 +504,24 @@ package body Part is
         Free(Part);
         Part := null;
     end Free;
+	
+    ----------------------------------------------------------------------
+    -- Unallocates memory for a part and all its atoms
+    ----------------------------------------------------------------------	
+	procedure Free_All (Part : in out Part_Ptr) is
+        procedure Free is
+			new Ada.Unchecked_Deallocation(Object => Part_Type,
+										   Name   => Part_Ptr);
+		Tmp_Data : Atom_Ptr;
+    begin
+		
+		if Get_Size(Part) > 0 then
+			Tmp_Data := Get_Data(Part); 
+			Free_List(Tmp_Data);
+		end if;
 
+        Free(Part);
+        Part := null;
+    end Free_All;
+	
 end;

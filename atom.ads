@@ -4,7 +4,8 @@ package Atom is
 	type Atom_Type is private;
 
 	function Create_Atom(X, Y, Z : Integer) return Atom_Ptr;
-
+	function Copy (Atom : in Atom_Ptr) return Atom_Ptr;
+	
 	function Get_X(Atom : in Atom_Ptr) return Integer;
 	function Get_Y(Atom : in Atom_Ptr) return Integer;
 	function Get_Z(Atom : in Atom_Ptr) return Integer;
@@ -23,6 +24,7 @@ package Atom is
 	procedure Put_All(Atom : in Atom_Ptr);
 
 	procedure Free(Atom : in out Atom_Ptr);
+	procedure Free_List(Atom : in out Atom_Ptr);
 
 private
 	type Atom_Ptr is access Atom_Type;

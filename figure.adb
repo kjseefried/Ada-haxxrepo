@@ -41,6 +41,23 @@ package body Figure is
 		return Figure.all.Data;
 	end Get_Data;
 	
+	function Get_Part (Figure : in Figure_Ptr; Ctr : in Integer)
+					  return Part_Ptr is
+		Out_Of_Bounds : exception;
+		Tmp_Part : Part_Ptr := Get_Data(Figure);
+		Count : Integer := Ctr;
+	begin
+		if Ctr >= Get_Size(Figure) then
+			raise Out_Of_Bounds;
+		end if;
+		
+		while Count > 0 loop
+			Tmp_Part := Get_Next(Tmp_Part);
+			Count := Count - 1;
+		end loop;
+		
+		return Tmp_Part;
+	end Get_Part;
 	
 	---------------------------------------------------------------------------
 	-- Insert a part in correct order
@@ -51,7 +68,7 @@ package body Figure is
 		Temp2 : Part_Ptr;
 	begin
 		if Is_Empty(Figure) then
-			-- Set_Data ökar även storlek med 1
+			Figure.all.Size := Figure.all.Size + 1;
 			Set_Data(Figure, Part);
 			return;
 		end if;
@@ -87,11 +104,10 @@ package body Figure is
 	
 	
 	---------------------------------------------------------------------------
-	-- Set the part list of a figure, increases Size by one.
+	-- Set the part list of a figure
 	---------------------------------------------------------------------------
 	procedure Set_Data (Figure : in Figure_Ptr; Part : in Part_Ptr) is
 	begin
-		Figure.all.Size := Figure.all.Size + 1;
 		Figure.all.Data := Part;
 	end Set_Data;
 	

@@ -8,6 +8,7 @@ package Figure is
 	function Is_Empty (Figure : in Figure_Ptr) return Boolean;
 	function Get_Size (Figure : in Figure_Ptr) return Integer;
 	function Get_Data (Figure : in Figure_Ptr) return Part_Ptr;
+	function Get_Part (Figure : in Figure_Ptr; Ctr : in Integer)return Part_Ptr;
 	
 	procedure Set_Data (Figure : in Figure_Ptr; Part : in Part_Ptr);
 	procedure Insert (Figure : in Figure_Ptr; Part : in Part_Ptr);

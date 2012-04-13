@@ -7,7 +7,7 @@ package body Atom is
 	---------------------------------------------------------------------------
 	-- Creates an Atom an initialize all coordinates to 0 and sets Next to null.
 	---------------------------------------------------------------------------
-	function Create_Atom(X, Y, Z : Integer) return Atom_Ptr is
+	function Create_Atom (X, Y, Z : Integer) return Atom_Ptr is
 	begin
 		return new Atom_Type'(Next => null,
 							  Has_Next => False,
@@ -15,6 +15,19 @@ package body Atom is
 							  Y => Y,
 							  Z => Z);
 	end Create_Atom;
+	
+	---------------------------------------------------------------------------
+	-- Copy of an atom
+	---------------------------------------------------------------------------
+	function Copy (Atom : in Atom_Ptr) return Atom_Ptr is
+	begin
+		return new Atom_Type'(Next     => null,
+							  Has_Next => False,
+							  X        => Get_X(Atom),
+							  Y        => Get_Y(Atom),
+							  Z        => Get_Z(Atom));
+	end Copy;
+	
 	
 	---------------------------------------------------------------------------
 	-- Returns a null Atom_Ptr
@@ -28,7 +41,7 @@ package body Atom is
 	---------------------------------------------------------------------------
 	-- Get the X coordinate of an Atom
 	---------------------------------------------------------------------------
-	function Get_X(Atom : in Atom_Ptr) return Integer is
+	function Get_X (Atom : in Atom_Ptr) return Integer is
 	begin
 		return Atom.all.X;
 	end Get_X;
@@ -37,7 +50,7 @@ package body Atom is
 	---------------------------------------------------------------------------
 	-- Get the Y coordinate of an Atom
 	---------------------------------------------------------------------------
-	function Get_Y(Atom : in Atom_Ptr) return Integer is
+	function Get_Y (Atom : in Atom_Ptr) return Integer is
 	begin
 		return Atom.all.Y;
 	end Get_Y;
@@ -46,7 +59,7 @@ package body Atom is
 	---------------------------------------------------------------------------
 	-- Get the Z coordinate of an Atom
 	---------------------------------------------------------------------------
-	function Get_Z(Atom : in Atom_Ptr) return Integer is
+	function Get_Z (Atom : in Atom_Ptr) return Integer is
 	begin
 		return Atom.all.Z;
 	end Get_Z;
@@ -56,7 +69,7 @@ package body Atom is
 	---------------------------------------------------------------------------
 	-- Set the X coordinate of an Atom
 	---------------------------------------------------------------------------
-	procedure Set_X(Atom : in Atom_Ptr; X : in Integer) is
+	procedure Set_X (Atom : in Atom_Ptr; X : in Integer) is
 	begin
 		Atom.all.X := X;
 	end Set_X;
@@ -64,7 +77,7 @@ package body Atom is
 	---------------------------------------------------------------------------
 	-- Set the Y coordinate of an Atom
 	---------------------------------------------------------------------------
-	procedure Set_Y(Atom : in Atom_Ptr; Y : in Integer) is
+	procedure Set_Y (Atom : in Atom_Ptr; Y : in Integer) is
 	begin
 		Atom.all.Y := Y;
 	end Set_Y;
@@ -72,7 +85,7 @@ package body Atom is
 	---------------------------------------------------------------------------
 	-- Set the Z coordinate of an Atom
 	---------------------------------------------------------------------------
-	procedure Set_Z(Atom : in Atom_Ptr; Z : in Integer) is
+	procedure Set_Z (Atom : in Atom_Ptr; Z : in Integer) is
 	begin
 		Atom.all.Z := Z;
 	end Set_Z;
@@ -81,7 +94,7 @@ package body Atom is
 	---------------------------------------------------------------------------
 	-- Get the next Atom in the list.
 	---------------------------------------------------------------------------
-	function Get_Next(Atom : in Atom_Ptr) return Atom_Ptr is
+	function Get_Next (Atom : in Atom_Ptr) return Atom_Ptr is
 	begin
 		return Atom.all.Next;
 	end Get_Next;
@@ -89,7 +102,7 @@ package body Atom is
 	---------------------------------------------------------------------------
 	-- Get the next Atom in the list.
 	---------------------------------------------------------------------------
-	function Has_Next(Atom : in Atom_Ptr) return Boolean is
+	function Has_Next (Atom : in Atom_Ptr) return Boolean is
 	begin
 		return Atom.all.Has_Next;
 	end Has_Next;
@@ -98,7 +111,7 @@ package body Atom is
 	---------------------------------------------------------------------------
 	-- Set the the next element of an Atom
 	---------------------------------------------------------------------------
-	procedure Set_Next(Atom : in Atom_Ptr; Next : in Atom_Ptr) is
+	procedure Set_Next (Atom : in Atom_Ptr; Next : in Atom_Ptr) is
 	begin
 		Atom.all.Has_Next := True;
 		Atom.all.Next := Next;
@@ -108,7 +121,7 @@ package body Atom is
 	---------------------------------------------------------------------------
 	-- Checks if the given Atom_Ptr is null
 	---------------------------------------------------------------------------
-	function Is_Empty(Atom : in Atom_Ptr) return Boolean is
+	function Is_Empty (Atom : in Atom_Ptr) return Boolean is
 	begin
 		return Atom = null;
 	end Is_Empty;
@@ -117,7 +130,7 @@ package body Atom is
     ---------------------------------------------------------------------------
 	-- Put an atom
 	---------------------------------------------------------------------------
-	procedure Put(Atom : in Atom_Ptr) is
+	procedure Put (Atom : in Atom_Ptr) is
 	begin
 
 		Put(Get_X(Atom),0);
@@ -131,7 +144,7 @@ package body Atom is
     ---------------------------------------------------------------------------
 	-- Put a list of atoms
 	---------------------------------------------------------------------------
-	procedure Put_All(Atom : in Atom_Ptr) is
+	procedure Put_All (Atom : in Atom_Ptr) is
 		Temp : Atom_Ptr := Atom;
 	begin
 
@@ -158,7 +171,7 @@ package body Atom is
     ---------------------------------------------------------------------------
     -- Deallocate the memory of an atom.
     ---------------------------------------------------------------------------
-	procedure Free(Atom : in out Atom_Ptr) is
+	procedure Free (Atom : in out Atom_Ptr) is
 		procedure Free is
 			new Ada.Unchecked_Deallocation(Object => Atom_Type,
 										   Name => Atom_Ptr);
@@ -166,4 +179,27 @@ package body Atom is
 		Free(Atom);
 		Atom := null;
 	end Free;
+	
+   ---------------------------------------------------------------------------
+    -- Deallocate the memory of an atom list.
+    ---------------------------------------------------------------------------
+	procedure Free_List (Atom : in out Atom_Ptr) is
+		procedure Free is
+			new Ada.Unchecked_Deallocation(Object => Atom_Type,
+										   Name => Atom_Ptr);
+		Tmp_Pointer : Atom_Ptr := null;
+		Recurse     : Boolean := False;
+	begin
+
+		if Has_Next(Atom) then
+			Tmp_Pointer := Get_Next(Atom);
+			Recurse     := True;
+		end if;
+		Free(Atom);
+		Atom := null;
+		if Recurse then
+			Free_List(Tmp_Pointer);
+		end if;
+	end Free_List;
+	
 end Atom;
