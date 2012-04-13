@@ -165,16 +165,16 @@ package body Part is
 
 		loop
 			if Part.Poss_Cntr = Get_Size(Get_Poss_List(Part)) then
-				
+
 				if Part.Rot_Cntr = 64 then
 					return False;
 				end if;
-				
+
 				Part.Poss_Cntr := 0;
 				Reverse_Rotations(Part);
-				
+
 				Part.Rot_Cntr := Part.Rot_Cntr + 1;
-				
+
 				while Counter < Part.Rot_Cntr loop
 					Rotate_X(Part);
 					if Counter mod 4 = 0 and Counter /= 0 then
@@ -481,19 +481,19 @@ package body Part is
     procedure Reverse_Rotations (Part : in Part_Ptr) is
     begin
         if Get_Rot_Z(Part) /= 0 then
-            for z in 1..(4 - Get_Rot_Z(Part)) loop
+            for z in 1..(4 - (Get_Rot_Z(Part) mod 4)) loop
                 Rotate_Z(Part);
             end loop;
         end if;
 
         if Get_Rot_Y(Part) /= 0 then
-            for y in 1..(4 - Get_Rot_Y(Part)) loop
+            for y in 1..(4 - (Get_Rot_Y(Part)  mod 4)) loop
                 Rotate_Y(Part);
             end loop;
         end if;
 
         if Get_Rot_X(Part) /= 0 then
-            for x in 1..(4 - Get_Rot_X(Part)) loop
+            for x in 1..(4 - (Get_Rot_X(Part) mod 4)) loop
                 Rotate_X(Part);
             end loop;
         end if;
