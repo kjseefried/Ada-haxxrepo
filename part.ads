@@ -50,7 +50,7 @@ package Part is
     procedure Rotate_Z (Part : in Part_Ptr);
     procedure Rotate_X (Part : in Part_Ptr);
     procedure Rotate_Y (Part : in Part_Ptr);
-    procedure Reverse_Rotations (Part : in Part_Ptr)
+    procedure Reverse_Rotations (Part : in Part_Ptr);
 
 	procedure Move_X (Part : in Part_Ptr; Value : in Integer);
 	procedure Move_Y (Part : in Part_Ptr; Value : in Integer);

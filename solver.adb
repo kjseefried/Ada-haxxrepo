@@ -5,7 +5,8 @@ package body Solver is
 	
 	procedure Solve (Figure : in Figure_Ptr; Parts : in Figure_Ptr) is
 		
-		At_Part  : Integer := Get_Size(Parts); --Start är end och move forward
+		At_Part  : Integer := Get_Size(Parts) - 1; 
+		--Start är end och move forward
 		Poss_Lst : Atom_Ptr; -- List of possibilities
 		Part     : Part_Ptr;
 		Search   : Boolean := True;
@@ -23,14 +24,14 @@ package body Solver is
 			end if;
 			
 			if Forward then
-				Set_Possibilities(Part, Poss_Lst);
+				Set_Poss_List(Part, Poss_Lst);
 			end if;
 			
 			
 			-- If found position, move forward
 			if Step_Forward(Part) then
 				
-				if At_Part = Get_Size(Figure) then
+				if At_Part = 0 then
 					--LÖST!--
 					return;
 				end if;

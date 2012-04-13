@@ -171,7 +171,7 @@ package body Part is
 				end if;
 				
 				Part.Poss_Cntr := 0;
-				Reset_Rotations(Part);
+				Reverse_Rotations(Part);
 				
 				Part.Rot_Cntr := Part.Rot_Cntr + 1;
 				
@@ -227,7 +227,7 @@ package body Part is
     ----------------------------------------------------------------------
     -- Returns the value of the parts "Rot_Cntr" field
     ----------------------------------------------------------------------
-	function Get_Rot_Cntr (Part : in Part_Ptr) return Part_Ptr is
+	function Get_Rot_Cntr (Part : in Part_Ptr) return Integer is
 	begin
 		return Part.all.Rot_Cntr;
 	end Get_Rot_Cntr;
@@ -235,7 +235,7 @@ package body Part is
     ----------------------------------------------------------------------
     -- Sets the parts "Rot_Cntr" field to Val
     ----------------------------------------------------------------------
-	procedure Set_Rot_Cntr (Part : in Part_Ptr; Val : in Part_Ptr) is
+	procedure Set_Rot_Cntr (Part : in Part_Ptr; Val : in Integer) is
 	begin
 		Part.all.Rot_Cntr := Val;
 	end Set_Rot_Cntr;
@@ -480,19 +480,19 @@ package body Part is
     ----------------------------------------------------------------------
     procedure Reverse_Rotations (Part : in Part_Ptr) is
     begin
-        if not Get_Rot_Z(Part) = 0 then
+        if Get_Rot_Z(Part) /= 0 then
             for z in 1..(4 - Get_Rot_Z(Part)) loop
                 Rotate_Z(Part);
             end loop;
         end if;
 
-        if not Get_Rot_Y(Part) = 0 then
+        if Get_Rot_Y(Part) /= 0 then
             for y in 1..(4 - Get_Rot_Y(Part)) loop
                 Rotate_Y(Part);
             end loop;
         end if;
 
-        if not Get_Rot_X(Part) = 0 then
+        if Get_Rot_X(Part) /= 0 then
             for x in 1..(4 - Get_Rot_X(Part)) loop
                 Rotate_X(Part);
             end loop;
