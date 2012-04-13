@@ -157,6 +157,7 @@ package body Part is
 	---------------------------------------------------------------------------
 	function Step_Forward(Part : in Part_Ptr) return Boolean is
 		No_Poss_List : exception;
+		Counter : Integer := 0;
 	begin
 		if Get_Poss_List(Part) = null then
 			raise No_Poss_List;
@@ -164,8 +165,25 @@ package body Part is
 		
 		loop
 			if Part.Poss_Cntr = Get_Size(Get_Poss_List(Part)) then
-				-- Nollställ pos-counter och rotera
-				-- Retunera falskt om rotering failar
+				
+				if Part.Rot_Cntr = 64 then
+					return False;
+				end if;
+				
+				Part.Poss_Cntr := 0;
+				Reset_Rotations(Part);
+				
+				Part.Rot_Cntr := Part.Rot_Cntr + 1;
+				
+				while Counter < Part.Rot_Cntr loop
+					Rotate_X(Part);
+					if Counter mod 4 = 0 and Counter /= 0 then
+						Rotate_Y(Part);
+					end if;
+					if Counter mod 16 = 0 and Counter /= 0 then
+						Rotate_Z(Part);
+					end if;
+				end loop;
 			end if;
 		
 			Part.Poss_Cntr := Part.Poss_Cntr + 1;

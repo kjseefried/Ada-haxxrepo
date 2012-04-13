@@ -17,7 +17,8 @@ procedure Test_Part is
     Atom6,
 	Orig_Atom: Atom_Ptr;
 	Figure : Figure_Ptr := Create_Figure;
-
+	
+	Counter : Integer := 0;
 begin
 	
 	
@@ -42,21 +43,32 @@ begin
 
 	Insert(Figure, Part);
 	Insert(Figure, Part2);
+	
+	while Counter < 1 loop
+		Rotate_X(Part);
+		if Counter mod 4 = 0 and Counter /= 0 then
+			Rotate_Y(Part);
+		end if;
+		if Counter mod 16 = 0 and Counter /= 0 then
+			Rotate_Z(Part);
+		end if;
+	end loop;
+	
+	Put(Part);
+	
+	--  Set_Poss_List(Part2, Part);
+	
+	--  Put(Part2);
+	
+	--  if Step_Forward(Part2) then
+	--  	Put_Line("--- Success ---");
+	--  else
+	--  	Put_Line("--Failed--");
+	--  end if;
+	
 
 	
-	Set_Poss_List(Part2, Part);
-	
-	Put(Part2);
-	
-	if Step_Forward(Part2) then
-		Put_Line("--- Success ---");
-	else
-		Put_Line("--Failed--");
-	end if;
-	
-
-	
-	Put(Part2);
+	--  Put(Part2);
 	
 	--  -- Rotation --
 	--  Put_Line("------ROTATION-------");
