@@ -2,8 +2,8 @@ with Part;
 use Part;
 with Atom;
 use Atom;
-with Ada.Text_IO;
-use Ada.Text_IO;
+with Ada.Text_IO; use Ada.Text_IO;
+with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 with Figure; use Figure;
 
 procedure Test_Part is
@@ -18,13 +18,14 @@ procedure Test_Part is
 	Orig_Atom: Atom_Ptr;
 	Figure : Figure_Ptr := Create_Figure;
 	
-	Counter : Integer := 0;
+	Counter : Integer := 1;
 begin
 	
 	
 	
 	-- Exclude--
-    Atom1 := Create_Atom(1,1,1);
+    Atom1 := Create_Atom(1,2,3);
+	
     Atom2 := Create_Atom(2,2,2);
     Atom3 := Create_Atom(3,3,3);
     Atom4 := Create_Atom(1,1,1);
@@ -33,8 +34,8 @@ begin
 	
 	Part := Create_Part;
 	Insert(Part, Atom1);
-	Insert(Part, Atom2);
-	Insert(Part, Atom3);
+	--Insert(Part, Atom2);
+	--Insert(Part, Atom3);
 	
 	Part2 := Create_Part;
 	Insert(Part2, Atom4);
@@ -44,7 +45,8 @@ begin
 	Insert(Figure, Part);
 	Insert(Figure, Part2);
 	
-	while Counter < 1 loop
+	Put(Part);
+	while Counter <= 5 loop
 		Rotate_X(Part);
 		if Counter mod 4 = 0 and Counter /= 0 then
 			Rotate_Y(Part);
@@ -52,6 +54,23 @@ begin
 		if Counter mod 16 = 0 and Counter /= 0 then
 			Rotate_Z(Part);
 		end if;
+		Counter := Counter + 1;
+	end loop;
+	
+	Put(Integer'Image(Get_Rot_Y(Part)));
+	
+	Put(Part);
+	Reverse_Rotations(Part);
+	Counter := 1;
+	while Counter <= 5 loop
+		Rotate_X(Part);
+		if Counter mod 4 = 0 and Counter /= 0 then
+			Rotate_Y(Part);
+		end if;
+		if Counter mod 16 = 0 and Counter /= 0 then
+			Rotate_Z(Part);
+		end if;
+		Counter := Counter + 1;
 	end loop;
 	
 	Put(Part);
