@@ -11,7 +11,7 @@ package body Part is
     begin
         return new Part_Type'(Size => 0,
 							  Data  => Get_Atom_Null_Ptr,
-							  Next => null,							  
+							  Next => null,
 							  Rot_X => 0,
 							  Rot_Y => 0,
 							  Rot_Z => 0,
@@ -22,7 +22,7 @@ package body Part is
 							  Poss_List => null,
 							  Poss_Cntr => 0);
     end Create_Part;
-	
+
 	-----------------------------------------------------------------------
 	-- Copy a part
 	-----------------------------------------------------------------------
@@ -34,7 +34,7 @@ package body Part is
 							  Rot_X => Get_Rot_X(Part),
 							  Rot_Y => Get_Rot_Y(Part),
 							  Rot_Z => Get_Rot_Z(Part),
-							  Rot_Cntr => Part.all.Rot_Cntr,
+							  Rot_Cntr => Get_Rot_Cntr(Part),
 							  Move_X => Get_Move_X(Part),
 							  Move_Y => Get_Move_Y(Part),
 							  Move_Z => Get_Move_Z(Part),
@@ -95,12 +95,12 @@ package body Part is
 			Temp1 := Get_Next(Temp1);
         end loop;
     end Insert;
-	
+
 	---------------------------------------------------------------------------
 	-- Set a new Poss_List, free's the old one if any
-	---------------------------------------------------------------------------	
+	---------------------------------------------------------------------------
 	procedure Set_Poss_List (Part : in Part_Ptr; Poss : in Part_Ptr) is
-		
+
 	begin
 		if Part.all.Poss_List /= null then
 			Free_All(Part.all.Poss_List);
@@ -108,11 +108,11 @@ package body Part is
 		Part.all.Poss_Cntr := 0;
 		Part.all.Poss_List := Poss;
 	end Set_Poss_List;
-	
+
 	---------------------------------------------------------------------------
 	-- Copies all parts in ´List´ but excludes all parts that ´Part´ contains
 	---------------------------------------------------------------------------
-	function Exclude_Part (List : in Part_Ptr; Part : in Part_Ptr) 
+	function Exclude_Part (List : in Part_Ptr; Part : in Part_Ptr)
 						  return Part_Ptr is
 		Tmp_Atom  : Atom_Ptr := Get_Data(List);
 		New_List  : Part_Ptr := Copy(List);
@@ -121,14 +121,14 @@ package body Part is
 			if not Contains(Part, Tmp_Atom) then
 				Insert(New_List, Copy(Tmp_Atom));
 			end if;
-			
+
 			if not Has_Next(Tmp_Atom) then
 				return New_List;
 			end if;
 			Tmp_Atom := Get_Next(Tmp_Atom);
 		end loop;
 	end Exclude_Part;
-	
+
 	---------------------------------------------------------------------------
 	-- Check if a part contains an atom
 	---------------------------------------------------------------------------
@@ -140,7 +140,7 @@ package body Part is
             if Atom = Temp_Atom then
                 return true;
             end if;
-			
+
 			if Has_Next(Temp_Atom) then
 
                 Temp_Atom := Get_Next(Temp_Atom);
@@ -150,8 +150,8 @@ package body Part is
 
         end loop;
     end Contains;
-	
-	
+
+
 	---------------------------------------------------------------------------
 	-- Step forward
 	---------------------------------------------------------------------------
@@ -161,21 +161,21 @@ package body Part is
 		if Get_Poss_List(Part) = null then
 			raise No_Poss_List;
 		end if;
-		
+
 		loop
 			if Part.Poss_Cntr = Get_Size(Get_Poss_List(Part)) then
 				-- Nollställ pos-counter och rotera
 				-- Retunera falskt om rotering failar
 			end if;
-		
+
 			Part.Poss_Cntr := Part.Poss_Cntr + 1;
-		
+
 			-- Flytta figuren så att Part befinner sig på Poss_List[Cntr]
 			-- Om passar, retunera True
 		end loop;
 	end Step_Forward;
-	
-	
+
+
     ----------------------------------------------------------------------
     -- Checks if the part has a next element
     ----------------------------------------------------------------------
@@ -183,13 +183,13 @@ package body Part is
 	begin
 		return Get_Next(Part) /= null;
 	end Has_Next;
-	
-	
+
+
 	function Get_Poss_List (Part : in Part_Ptr) return Part_Ptr is
 	begin
 		return Part.all.Poss_List;
 	end Get_Poss_List;
-	
+
     ----------------------------------------------------------------------
     -- Returns the value of the parts "Next" field
     ----------------------------------------------------------------------
@@ -205,6 +205,22 @@ package body Part is
 	begin
 		Part.all.Next := Next;
 	end Set_Next;
+
+    ----------------------------------------------------------------------
+    -- Returns the value of the parts "Rot_Cntr" field
+    ----------------------------------------------------------------------
+	function Get_Rot_Cntr (Part : in Part_Ptr) return Part_Ptr is
+	begin
+		return Part.all.Rot_Cntr;
+	end Get_Rot_Cntr;
+
+    ----------------------------------------------------------------------
+    -- Sets the parts "Rot_Cntr" field to Val
+    ----------------------------------------------------------------------
+	procedure Set_Rot_Cntr (Part : in Part_Ptr; Val : in Part_Ptr) is
+	begin
+		Part.all.Rot_Cntr := Val;
+	end Set_Rot_Cntr;
 
     ----------------------------------------------------------------------
     -- Returns the value of the parts "Data" field
@@ -269,7 +285,7 @@ package body Part is
     begin
         Part.all.Rot_Z := Val;
     end Set_Rot_Z;
-	
+
     ----------------------------------------------------------------------
     -- Returns the value of the parts "Max_X" field
     ----------------------------------------------------------------------
@@ -317,7 +333,7 @@ package body Part is
     begin
         Part.all.Move_Z := Val;
     end Set_Move_Z;
-	
+
     ----------------------------------------------------------------------
     -- Checks if the part pointer is null
     ----------------------------------------------------------------------
@@ -389,7 +405,7 @@ package body Part is
         temp_part_x : Integer;
     begin
 		Set_Rot_Z(Part, Get_Rot_Z(Part) + 1);
-		
+
 		loop
             temp_part_x := -1 * Get_X(temp_atom);
             Set_X(temp_atom,Get_Y(temp_atom));
@@ -442,6 +458,30 @@ package body Part is
     end Rotate_Y;
 
     ----------------------------------------------------------------------
+    -- Reverses all rotations done to a part
+    ----------------------------------------------------------------------
+    procedure Reverse_Rotations (Part : in Part_Ptr) is
+    begin
+        if not Get_Rot_Z(Part) = 0 then
+            for z in 1..(4 - Get_Rot_Z(Part)) loop
+                Rotate_Z(Part);
+            end loop;
+        end if;
+
+        if not Get_Rot_Y(Part) = 0 then
+            for y in 1..(4 - Get_Rot_Y(Part)) loop
+                Rotate_Y(Part);
+            end loop;
+        end if;
+
+        if not Get_Rot_X(Part) = 0 then
+            for x in 1..(4 - Get_Rot_X(Part)) loop
+                Rotate_X(Part);
+            end loop;
+        end if;
+    end Reverse_Rotations;
+
+    ----------------------------------------------------------------------
     -- Move the part
     ----------------------------------------------------------------------
 	procedure Move_X (Part : in Part_Ptr; Value : in Integer) is
@@ -475,7 +515,7 @@ package body Part is
         end loop;
 	end Move_Y;
 
-	----------------------------------------------------------------------
+    ----------------------------------------------------------------------
     -- Move the part
     ----------------------------------------------------------------------
 	procedure Move_Z (Part : in Part_Ptr; Value : in Integer) is
@@ -492,8 +532,7 @@ package body Part is
         end loop;
 	end Move_Z;
 
-
-    ----------------------------------------------------------------------
+     ----------------------------------------------------------------------
     -- Unallocates memory for a part
     ----------------------------------------------------------------------
     procedure Free (Part : in out Part_Ptr) is
@@ -504,24 +543,24 @@ package body Part is
         Free(Part);
         Part := null;
     end Free;
-	
+
     ----------------------------------------------------------------------
     -- Unallocates memory for a part and all its atoms
-    ----------------------------------------------------------------------	
+    ----------------------------------------------------------------------
 	procedure Free_All (Part : in out Part_Ptr) is
         procedure Free is
 			new Ada.Unchecked_Deallocation(Object => Part_Type,
 										   Name   => Part_Ptr);
 		Tmp_Data : Atom_Ptr;
     begin
-		
+
 		if Get_Size(Part) > 0 then
-			Tmp_Data := Get_Data(Part); 
+			Tmp_Data := Get_Data(Part);
 			Free_List(Tmp_Data);
 		end if;
 
         Free(Part);
         Part := null;
     end Free_All;
-	
+
 end;
