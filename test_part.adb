@@ -24,17 +24,17 @@ begin
 	
 	
 	-- Exclude--
-    Atom1 := Create_Atom(1,2,3);
-	
+    Atom1 := Create_Atom(1,1,1);
     Atom2 := Create_Atom(2,2,2);
     Atom3 := Create_Atom(3,3,3);
+	
     Atom4 := Create_Atom(1,1,1);
-    Atom5 := Create_Atom(1,2,2);
-    Atom6 := Create_Atom(1,3,3);	
+    Atom5 := Create_Atom(2,2,2);
+    Atom6 := Create_Atom(3,3,3);	
 	
 	Part := Create_Part;
 	Insert(Part, Atom1);
-	--Insert(Part, Atom2);
+	Insert(Part, Atom2);
 	--Insert(Part, Atom3);
 	
 	Part2 := Create_Part;
@@ -45,35 +45,50 @@ begin
 	Insert(Figure, Part);
 	Insert(Figure, Part2);
 	
-	Put(Part);
-	while Counter <= 5 loop
-		Rotate_X(Part);
-		if Counter mod 4 = 0 and Counter /= 0 then
-			Rotate_Y(Part);
-		end if;
-		if Counter mod 16 = 0 and Counter /= 0 then
-			Rotate_Z(Part);
-		end if;
-		Counter := Counter + 1;
-	end loop;
+	if Contains(Part2, Part) then
+		Put("Japp");
+	else
+		Put("Nopp");
+	end if;
+
+
+	--  Reverse_Rotations(Part);
+	--  Put(Part);
+	--  for L in Counter..50000000 loop
+	--  	Rotate_X(Part);
+	--  end loop;
 	
-	Put(Integer'Image(Get_Rot_Y(Part)));
+	--  for L in Counter..50000000 loop
+	--  	if Counter mod 4 = 0 and Counter /= 0 then
+	--  		Rotate_Y(Part);
+	--  	end if;
+	--  end loop;
 	
-	Put(Part);
-	Reverse_Rotations(Part);
-	Counter := 1;
-	while Counter <= 5 loop
-		Rotate_X(Part);
-		if Counter mod 4 = 0 and Counter /= 0 then
-			Rotate_Y(Part);
-		end if;
-		if Counter mod 16 = 0 and Counter /= 0 then
-			Rotate_Z(Part);
-		end if;
-		Counter := Counter + 1;
-	end loop;
+	--  for L in Counter..50000000 loop
+	--  	if Counter mod 16 = 0 and Counter /= 0 then
+	--  		Rotate_Z(Part);
+	--  	end if;
+	--  end loop;
 	
-	Put(Part);
+	--  Put(Part);
+	--  Reverse_Rotations(Part);
+	--  Put(Part);
+	
+	--  Put(Part);
+	--  Reverse_Rotations(Part);
+	--  Counter := 1;
+	--  while Counter <= 5 loop
+	--  	Rotate_X(Part);
+	--  	if Counter mod 4 = 0 and Counter /= 0 then
+	--  		Rotate_Y(Part);
+	--  	end if;
+	--  	if Counter mod 16 = 0 and Counter /= 0 then
+	--  		Rotate_Z(Part);
+	--  	end if;
+	--  	Counter := Counter + 1;
+	--  end loop;
+	
+	--  Put(Part);
 	
 	--  Set_Poss_List(Part2, Part);
 	

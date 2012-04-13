@@ -30,7 +30,8 @@ package Part is
 	function Exclude_Part(List : in Part_Ptr; Part : in Part_Ptr)
 						 return Part_Ptr;
 
-	function Step_Forward (Part : in Part_Ptr) return Boolean;
+	function Step_Forward (Part : in Part_Ptr; Figure : in Part_Ptr) 
+						  return Boolean;
 
 	procedure Set_Rot_X (Part : in Part_Ptr; Val : in Integer);
 	procedure Set_Rot_Y (Part : in Part_Ptr; Val : in Integer);
@@ -51,7 +52,8 @@ package Part is
     procedure Rotate_X (Part : in Part_Ptr);
     procedure Rotate_Y (Part : in Part_Ptr);
     procedure Reverse_Rotations (Part : in Part_Ptr);
-
+	
+	procedure Move_To (Part : in Part_Ptr; To : in Atom_Ptr);
 	procedure Move_X (Part : in Part_Ptr; Value : in Integer);
 	procedure Move_Y (Part : in Part_Ptr; Value : in Integer);
 	procedure Move_Z (Part : in Part_Ptr; Value : in Integer);

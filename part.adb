@@ -1,6 +1,6 @@
 with Ada.Unchecked_Deallocation;
 with Ada.Text_IO; use Ada.Text_IO;
-
+with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 
 package body Part is
 
@@ -110,6 +110,22 @@ package body Part is
 	end Set_Poss_List;
 
 	---------------------------------------------------------------------------
+	-- Moves a part to specific location
+	---------------------------------------------------------------------------	
+	procedure Move_To (Part : in Part_Ptr; To : in Atom_Ptr) is
+		Offset_X : Integer;
+		Offset_Y : Integer;
+		Offset_Z : Integer;
+	begin
+		Offset_X := Get_X(To) - Get_X(Get_Data(Part));
+		Offset_Y := Get_Y(To) - Get_Y(Get_Data(Part));
+		Offset_Z := Get_Z(To) - Get_Z(Get_Data(Part));
+		Move_X(Part, Offset_X);
+		Move_Y(Part, Offset_Y);
+		Move_Z(Part, Offset_Z);
+	end Move_To;
+	
+	---------------------------------------------------------------------------
 	-- Copies all parts in ´List´ but excludes all parts that ´Part´ contains
 	---------------------------------------------------------------------------
 	function Exclude_Part (List : in Part_Ptr; Part : in Part_Ptr)
@@ -155,41 +171,57 @@ package body Part is
 	---------------------------------------------------------------------------
 	-- Step forward
 	---------------------------------------------------------------------------
-	function Step_Forward(Part : in Part_Ptr) return Boolean is
+	function Step_Forward(Part : in Part_Ptr, Figure : in Part_Ptr) 
+						 return Boolean is
 		No_Poss_List : exception;
-		Counter : Integer := 0;
+		Tmp_Atom : Atom;
 	begin
 		if Get_Poss_List(Part) = null then
 			raise No_Poss_List;
 		end if;
 
 		loop
-			if Part.Poss_Cntr = Get_Size(Get_Poss_List(Part)) then
+			if Get_Poss_Cntr(Part) = Get_Size(Get_Poss_List(Part)) then
 
-				if Part.Rot_Cntr = 64 then
+				if Get_Rot_Cntr(Part) = 64 then
 					return False;
 				end if;
 
 				Part.Poss_Cntr := 0;
 				Reverse_Rotations(Part);
 
-				Part.Rot_Cntr := Part.Rot_Cntr + 1;
-
-				while Counter < Part.Rot_Cntr loop
+				Set_Rot_Cntr(Part, Get_Rot_Cntr(Part) + 1);
+				for L in 0..Get_Rot_Cntr(Part) loop
 					Rotate_X(Part);
+				end loop;
+				
+				for L in 0..Get_Rot_Cntr(Part) loop
 					if Counter mod 4 = 0 and Counter /= 0 then
 						Rotate_Y(Part);
 					end if;
+				end loop;
+				
+				for L in 0..Get_Rot_Cntr(Part) loop
 					if Counter mod 16 = 0 and Counter /= 0 then
 						Rotate_Z(Part);
 					end if;
 				end loop;
+
 			end if;
-
+			
+			Tmp_Atom := Get_Data(Part);
+			for L in 0..Get_Poss_Cntr(Part) loop
+				Tmp_Atom := Get_Next(Tmp_Atom);
+			end loop;
+			
+			Move_To(Part, Tmp_Atom);
+			
+			if Contains(Figure, Part) then
+				Put("JESS!");
+				return True;
+			end if;
+			
 			Part.Poss_Cntr := Part.Poss_Cntr + 1;
-
-			-- Flytta figuren så att Part befinner sig på Poss_List[Cntr]
-			-- Om passar, retunera True
 		end loop;
 	end Step_Forward;
 
