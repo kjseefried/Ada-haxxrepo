@@ -1,6 +1,9 @@
-
+with Figure; use Figure;
+with Atom; use Atom;
+with Part; use Part;
 package Solver is
 	
-	procedure Solve (Figure : in Figure_Ptr; Parts : in Figure_Ptr);
+	function Solve (Figure : in Figure_Ptr; Parts : in Figure_Ptr) 
+				   return Boolean;
 	
 end Solver;

@@ -10,7 +10,7 @@ package Part is
     function Get_Data (Part : in Part_Ptr)return Atom_Ptr;
 
     function Is_Null (Part : in Part_Ptr) return Boolean;
-     function Is_Empty (Part : in Part_Ptr) return Boolean;
+	function Is_Empty (Part : in Part_Ptr) return Boolean;
     function Get_Size (Part : in Part_Ptr) return Integer;
     function Get_Next (Part : in Part_Ptr) return Part_Ptr;
     function Has_Next (Part : in Part_Ptr) return Boolean;
@@ -26,9 +26,10 @@ package Part is
 	function Get_Move_Z (Part : in Part_Ptr) return Integer;
 
 	function Get_Poss_List (Part : in Part_Ptr) return Part_Ptr;
-
+	function No_More_Steps (Part : in Part_Ptr) return Boolean;
+	
 	function Contains (Part : in Part_Ptr; Atom : in Atom_Ptr) return Boolean;
-      function Contains (Dest,Src : in Part_Ptr) return Boolean;
+	function Contains (Dest,Src : in Part_Ptr) return Boolean;
 	function Exclude_Part(List : in Part_Ptr; Part : in Part_Ptr)
 						 return Part_Ptr;
 

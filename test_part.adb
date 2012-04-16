@@ -1,14 +1,13 @@
-with Part;
-use Part;
-with Atom;
-use Atom;
+with Part; use Part;
+with Atom; use Atom;
 with Ada.Text_IO; use Ada.Text_IO;
 with Ada.Integer_Text_IO; use Ada.Integer_Text_IO;
 with Figure; use Figure;
+with Solver; use Solver;
 
 procedure Test_Part is
 
-    Part1, Part2  : Part_Ptr;
+    Part0, Part1, Part2, Part3, Part4  : Part_Ptr;
 	
     Atom1,
     Atom2,
@@ -25,7 +24,12 @@ procedure Test_Part is
     Atom12,
     Atom13,
     Atom14,
-    Atom15 : Atom_Ptr;
+    Atom15,
+    Atom26,
+	Atom27,
+	Atom38,
+	Atom39,
+	Atom40 : Atom_Ptr;
 	
 	Figure1, Figure2 : Figure_Ptr := Create_Figure;
 	
@@ -43,57 +47,75 @@ begin
 	Atom8 := Create_Atom(3,2,3);
 	Atom9 := Create_Atom(2,3,3);
 	Atom10 := Create_Atom(3,3,3);
-
-    Atom11 := Create_Atom(5,1,1);
-    Atom12 := Create_Atom(6,1,1);
-    Atom13 := Create_Atom(6,2,1);
-    Atom14 := Create_Atom(7,2,1);
+	
+	
+    Atom11 := Create_Atom(1,1,1);
+    Atom12 := Create_Atom(3,1,1);
+    Atom13 := Create_Atom(2,1,1);
+    Atom14 := Create_Atom(1,1,2);
+    Atom15 := Create_Atom(1,1,3);
+	
+    Atom26 := Create_Atom(1,2,3);	
+	Atom27 := Create_Atom(2,2,3);
+	
+	Atom38 := Create_Atom(3,2,3);
+	Atom39 := Create_Atom(2,3,3);
+	
+	Atom40 := Create_Atom(3,3,3);
+	
+	
     --Atom15 := Create_Atom(1,1,1);	
-	
+	Part0 := Create_Part;
+	Insert(Part0, Atom1);
+	Insert(Part0, Atom2);
+	Insert(Part0, Atom3);
+	Insert(Part0, Atom4);
+	Insert(Part0, Atom5);
+	Insert(Part0, Atom6);
+	Insert(Part0, Atom7);
+	Insert(Part0, Atom8);
+	Insert(Part0, Atom9);
+	Insert(Part0, Atom10);
+
 	Part1 := Create_Part;
-	Insert(Part1, Atom1);
-	Insert(Part1, Atom2);
-	Insert(Part1, Atom3);
-	Insert(Part1, Atom4);
-	Insert(Part1, Atom5);
-	Insert(Part1, Atom6);
-	Insert(Part1, Atom7);
-	Insert(Part1, Atom8);
-	Insert(Part1, Atom9);
-	Insert(Part1, Atom10);
-	
 	Part2 := Create_Part;
-	Insert(Part2, Atom11);
-	Insert(Part2, Atom12);
-	Insert(Part2, Atom13);
-	Insert(Part2, Atom14);
-	--Insert(Part2, Atom15);	
+	Part3 := Create_Part;
+	Part4 := Create_Part;
 	
-	Insert(Figure1, Part1);
+	Insert(Part1,Atom11);
+	Insert(Part1,Atom12);
+	Insert(Part1,Atom13);
+	Insert(Part1,Atom14);
+	Insert(Part1,Atom15);
+	
+	Insert(Part2,Atom26);
+	Insert(Part2,Atom27);
+	
+	Insert(Part3,Atom38);
+	Insert(Part3,Atom39);
+	
+	Insert(Part4,Atom40);
+	
+	Insert(Figure1, Part0);
+	
+	Insert(Figure2, Part1);
 	Insert(Figure2, Part2);
+	Insert(Figure2, Part3);
+	Insert(Figure2, Part4);
 	
-
-	Set_Poss_List(Part2, Part1);
-
-	while Step_Forward(Part2, Part1) loop
-		Put_Line("Success");
-		Counter := Counter + 1;
-		Put("X: ");
-		Put(Get_Rot_X(Part2));New_Line;
-		Put("Y: "); 
-		Put(Get_Rot_Y(Part2));New_Line;	
-		Put("Z: "); 
-		Put(Get_Rot_Z(Part2));New_Line(2);
-		
-		Put("Move_X: ");
-		Put(Get_Move_X(Part2));New_Line;	
-		Put("Move_Y: ");
-		Put(Get_Move_Y(Part2));New_Line;
-		Put("Move_Z: ");
-		Put(Get_Move_Z(Part2));New_Line;	
-	end loop;
-	Put_Line("Fail");
-	Put(Counter);
+	
+	
+	if Solve(Figure1, Figure2) then
+		Put("SOLVED!");
+		Put(Figure2);
+	else
+		Put("UNSOLVED!");
+	end if;
+	
+	
+	
+	
+	
 
 	
 	--  Reverse_Rotations(Part);

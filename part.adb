@@ -106,6 +106,7 @@ package body Part is
 		if Part.all.Poss_List /= null then
 			Free_All(Part.all.Poss_List);
 		end if;
+		Part.all.Rot_Cntr := 0;
 		Part.all.Poss_Cntr := 0;
 		Part.all.Poss_List := Poss;
 	end Set_Poss_List;
@@ -240,8 +241,19 @@ package body Part is
 			Part.Poss_Cntr := Part.Poss_Cntr + 1;
 		end loop;
 	end Step_Forward;
-
-
+	
+    ----------------------------------------------------------------------
+    -- Checks if the part has more steps
+    ----------------------------------------------------------------------
+	function No_More_Steps (Part : in Part_Ptr) return Boolean is
+	begin
+		if Get_Poss_Cntr(Part) = Get_Size(Get_Poss_List(Part)) and
+		  Get_Rot_Cntr(Part) = 64 then
+			return True;
+		end if;
+		return False;
+	end No_More_Steps;
+	
     ----------------------------------------------------------------------
     -- Checks if the part has a next element
     ----------------------------------------------------------------------
