@@ -305,9 +305,25 @@ package body Part is
     ----------------------------------------------------------------------
 	procedure Set_Rot_Cntr (Part : in Part_Ptr; Val : in Integer) is
 	begin
-		Part.all.Rot_Cntr := Val;
+	   Part.all.Rot_Cntr := Val;
 	end Set_Rot_Cntr;
-
+	
+	----------------------------------------------------------------------
+	-- Returns the value of the parts "Order" field
+	----------------------------------------------------------------------
+	function Get_Order (Part : in Part_Ptr) return Atom_Ptr is
+	begin
+	   return Part.All.Order;
+	end Get_Order;
+	
+	----------------------------------------------------------------------
+	-- Returns the value of the parts "Order" field
+	----------------------------------------------------------------------
+	function Set_Order (Part : in Part_Ptr; Val : in Integer) return Atom_Ptr is
+	begin
+	   Part.All.Order = Val;
+	end Get_Order;
+	
     ----------------------------------------------------------------------
     -- Returns the value of the parts "Data" field
     ----------------------------------------------------------------------
