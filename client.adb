@@ -73,7 +73,7 @@ package body Client is
 	 Tmp_Z := 1;
 	 
 	 Part := Create_Part;
-	 
+	 Set_Order(Part, L);
 	 for I in 1..(X*Y*Z) loop
 	    Get(Socket, Atom_Bit);
 	    

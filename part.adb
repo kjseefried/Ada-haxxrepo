@@ -11,17 +11,18 @@ package body Part is
     function Create_Part return Part_Ptr is
     begin
         return new Part_Type'(Size => 0,
-							  Data  => Get_Atom_Null_Ptr,
-							  Next => null,
-							  Rot_X => 0,
-							  Rot_Y => 0,
-							  Rot_Z => 0,
-							  Rot_Cntr => 0,
-							  Move_X => 0,
-							  Move_Y => 0,
-							  Move_Z => 0,
-							  Poss_List => null,
-							  Poss_Cntr => 0);
+			      Data  => Get_Atom_Null_Ptr,
+			      Next => null,
+			      Rot_X => 0,
+			      Rot_Y => 0,
+			      Rot_Z => 0,
+			      Rot_Cntr => 0,
+			      Move_X => 0,
+			      Move_Y => 0,
+			      Move_Z => 0,
+			      Poss_List => null,
+			      Poss_Cntr => 0,
+			      Order => 0);
     end Create_Part;
 
 	-----------------------------------------------------------------------
@@ -30,17 +31,19 @@ package body Part is
 	function Copy (Part : in Part_Ptr) return Part_Ptr is
 	begin
 		return new Part_Type'(Size  => 0,
-							  Data  => Get_Atom_Null_Ptr,
-							  Next  => null,
-							  Rot_X => Get_Rot_X(Part),
-							  Rot_Y => Get_Rot_Y(Part),
-							  Rot_Z => Get_Rot_Z(Part),
-							  Rot_Cntr => Get_Rot_Cntr(Part),
-							  Move_X => Get_Move_X(Part),
-							  Move_Y => Get_Move_Y(Part),
-							  Move_Z => Get_Move_Z(Part),
-							  Poss_List => null,
-							  Poss_Cntr => 0);
+				      Data  => Get_Atom_Null_Ptr,
+				      Next  => null,
+				      Rot_X => Get_Rot_X(Part),
+				      Rot_Y => Get_Rot_Y(Part),
+				      Rot_Z => Get_Rot_Z(Part),
+				      Rot_Cntr => Get_Rot_Cntr(Part),
+				      Move_X => Get_Move_X(Part),
+				      Move_Y => Get_Move_Y(Part),
+				      Move_Z => Get_Move_Z(Part),
+				      Poss_List => null,
+				      Poss_Cntr => 0,
+				      Order => Get_Order(Part)
+				     );
 	end Copy;
 
     ----------------------------------------------------------------------
@@ -311,7 +314,7 @@ package body Part is
 	----------------------------------------------------------------------
 	-- Returns the value of the parts "Order" field
 	----------------------------------------------------------------------
-	function Get_Order (Part : in Part_Ptr) return Atom_Ptr is
+	function Get_Order (Part : in Part_Ptr) return Integer is
 	begin
 	   return Part.All.Order;
 	end Get_Order;
@@ -319,10 +322,10 @@ package body Part is
 	----------------------------------------------------------------------
 	-- Returns the value of the parts "Order" field
 	----------------------------------------------------------------------
-	function Set_Order (Part : in Part_Ptr; Val : in Integer) return Atom_Ptr is
+	procedure Set_Order (Part : in Part_Ptr; Val : in Integer) is
 	begin
-	   Part.All.Order = Val;
-	end Get_Order;
+	   Part.All.Order := Val;
+	end Set_Order;
 	
     ----------------------------------------------------------------------
     -- Returns the value of the parts "Data" field

@@ -50,6 +50,7 @@ package Part is
    procedure Set_Data (Part : in Part_Ptr; Atom : in Atom_Ptr);
    procedure Set_Poss_List(Part : in Part_Ptr; Poss : in Part_Ptr);
    procedure Set_Order(Part : in Part_Ptr; Val : in Integer);
+   function Get_Order(Part : in Part_Ptr) return Integer;
    
    procedure Insert (Part : in out Part_Ptr; Atom : in Atom_Ptr);
 

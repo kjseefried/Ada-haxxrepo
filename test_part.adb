@@ -112,8 +112,11 @@ begin
 		Put("UNSOLVED!");
 	end if;
 	
-	
-	
+	New_Line(10);
+	Put(Part0);
+	Rotate_X(Part0);
+	New_Line;
+	Put(Get_Rot_Cntr(Part0));
 	
 	
 

@@ -43,6 +43,7 @@ begin
 	    Get_Figure_Description(Socket, Figure, Figure_No);
 	    if (Solve(Figure, Parts)) then
 	       Put_Line("GICK!");
+	       Put_Line(Socket ,Create_Message('P', Get_Rotation_Data(Parts)));
 	    else
 	       Put_Line("FUCK");
 	    end if;
@@ -56,5 +57,6 @@ begin
       end case;
    end loop;
    
+   Put(Parts);
    
 end Soma;
