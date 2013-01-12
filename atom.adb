@@ -20,9 +20,14 @@ package body Atom is
 	-- Copy of an atom
 	---------------------------------------------------------------------------
 	function Copy (Atom : in Atom_Ptr) return Atom_Ptr is
+		Tmp : Atom_Ptr := null;
 	begin
-		return new Atom_Type'(Next     => null,
-							  Has_Next => False,
+		if Has_Next(Atom) then
+			Tmp := Copy(Get_Next(Atom));
+		end if;
+
+		return new Atom_Type'(Next     => Tmp,
+							  Has_Next => Has_Next(Atom),
 							  X        => Get_X(Atom),
 							  Y        => Get_Y(Atom),
 							  Z        => Get_Z(Atom));

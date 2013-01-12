@@ -3,6 +3,14 @@ with Ada.Text_IO; use Ada.Text_IO;
 
 package body Figure is
 	
+	--
+	--
+	--
+	function Is_Null(Figure : in Figure_Ptr) return Boolean is
+	begin
+		return Figure = null;
+	end Is_Null;
+
 	---------------------------------------------------------------------------
 	-- Create an empty Figure
 	---------------------------------------------------------------------------
@@ -14,6 +22,11 @@ package body Figure is
 		return Figure;
 	end Create_Figure;
 	
+	function Copy (Figure : in Figure_Ptr) return Figure_Ptr is
+	begin
+		return new Figure_Type'(Size => Get_Size(Figure),
+								Data => Copy(Get_Data(Figure)));
+	end Copy;
 	
 	---------------------------------------------------------------------------
 	-- Get the size of a figure

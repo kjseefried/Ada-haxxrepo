@@ -29,8 +29,12 @@ package body Part is
 	-----------------------------------------------------------------------
 	function Copy (Part : in Part_Ptr) return Part_Ptr is
 	begin
-		return new Part_Type'(Size  => 0,
-							  Data  => Get_Atom_Null_Ptr,
+		if Part = null then
+			return null;
+		end if;
+
+		return new Part_Type'(Size  => Get_Size(Part),
+							  Data  => Copy(Get_Data(Part)),
 							  Next  => null,
 							  Rot_X => Get_Rot_X(Part),
 							  Rot_Y => Get_Rot_Y(Part),
@@ -39,9 +43,10 @@ package body Part is
 							  Move_X => Get_Move_X(Part),
 							  Move_Y => Get_Move_Y(Part),
 							  Move_Z => Get_Move_Z(Part),
-							  Poss_List => null,
-							  Poss_Cntr => 0);
+							  Poss_List => Copy(Get_Poss_List(Part)),
+							  Poss_Cntr => Get_Poss_Cntr(Part));
 	end Copy;
+
 
     ----------------------------------------------------------------------
     -- Insert an atom in a part, increment the size of the part
@@ -131,10 +136,9 @@ package body Part is
 	---------------------------------------------------------------------------
 	-- Copies all parts in ´List´ but excludes all parts that ´Part´ contains
 	---------------------------------------------------------------------------
-	function Exclude_Part (List : in Part_Ptr; Part : in Part_Ptr)
-						  return Part_Ptr is
+	procedure Exclude_Part (List : in Part_Ptr; Part : in Part_Ptr) is
 		Tmp_Atom  : Atom_Ptr := Get_Data(List);
-		New_List  : Part_Ptr := Copy(List);
+		New_List  : Part_Ptr := List;
 	begin
 		loop
 			if not Contains(Part, Tmp_Atom) then
@@ -142,7 +146,7 @@ package body Part is
 			end if;
 
 			if not Has_Next(Tmp_Atom) then
-				return New_List;
+				return;
 			end if;
 			Tmp_Atom := Get_Next(Tmp_Atom);
 		end loop;
@@ -192,30 +196,15 @@ package body Part is
           end if;
       end Contains;
 
+
     ---------------------------------------------------------------------------
 	-- Step forward
 	---------------------------------------------------------------------------
 	function Step_Forward(Part : in Part_Ptr; Figure : in Part_Ptr) 
 						 return Boolean is
-		No_Poss_List : exception;
-		Tmp_Atom : Atom_Ptr;
-		Orig_Part : Part_Ptr := Copy(Part);
 	begin
-		
 		return true;
 	end Step_Forward;
-	
-    ----------------------------------------------------------------------
-    -- Checks if the part has more steps
-    ----------------------------------------------------------------------
-	function No_More_Steps (Part : in Part_Ptr) return Boolean is
-	begin
-		if Get_Poss_Cntr(Part) = Get_Size(Get_Poss_List(Part)) and
-		  Get_Rot_Cntr(Part) = 64 then
-			return True;
-		end if;
-		return False;
-	end No_More_Steps;
 	
     ----------------------------------------------------------------------
     -- Checks if the part has a next element
@@ -254,6 +243,33 @@ package body Part is
 	begin
 		return Part.all.Rot_Cntr;
 	end Get_Rot_Cntr;
+
+	procedure Set_Rot_Cntr (Part : in Part_Ptr; Cntr : in Integer) is
+	begin
+		Part.all.Rot_Cntr := Cntr;
+	end Set_Rot_Cntr;
+	---
+	--
+	---
+	procedure Set_Poss_Cntr (Part : in Part_Ptr; Cntr : in Integer) is
+	begin
+		Part.all.Poss_Cntr := Cntr;
+	end Set_Poss_Cntr;
+	----------------------------------------------------------------------
+	-- Increase poss contr
+	----------------------------------------------------------------------
+	procedure Inc_Poss_Cntr (Part : in Part_Ptr) is
+	begin
+		Part.all.Poss_Cntr := Part.all.Poss_Cntr + 1;
+	end Inc_Poss_Cntr;
+
+	----------------------------------------------------------------------
+	-- Reset poss contr
+	----------------------------------------------------------------------
+	procedure Reset_Poss_Cntr (Part : in Part_Ptr) is
+	begin
+		Part.all.Poss_Cntr := 0;
+	end Reset_Poss_Cntr;
 
     ----------------------------------------------------------------------
     -- Returns the value of the parts "Poss_Cntr" field

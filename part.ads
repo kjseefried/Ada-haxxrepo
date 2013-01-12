@@ -17,23 +17,25 @@ package Part is
 
 	function Inc_Rot_Cntr (Part : in Part_Ptr) return Boolean;
 	function Get_Rot_Cntr (Part : in Part_Ptr) return Integer;
+	procedure Set_Rot_Cntr (Part : in Part_Ptr; Cntr : in Integer);
 	function Get_Rot_X (Part : in Part_Ptr) return Integer;
     function Get_Rot_Y (Part : in Part_Ptr) return Integer;
 	function Get_Rot_Z (Part : in Part_Ptr) return Integer;
 
 	function Get_Poss_Cntr (Part : in Part_Ptr) return Integer;
+	procedure Inc_Poss_Cntr (Part : in Part_Ptr);
+	procedure Reset_Poss_Cntr (Part : in Part_Ptr);
+	procedure Set_Poss_Cntr (Part : in Part_Ptr; Cntr : in Integer);
 
 	function Get_Move_X (Part : in Part_Ptr) return Integer;
     function Get_Move_Y (Part : in Part_Ptr) return Integer;
 	function Get_Move_Z (Part : in Part_Ptr) return Integer;
 
 	function Get_Poss_List (Part : in Part_Ptr) return Part_Ptr;
-	function No_More_Steps (Part : in Part_Ptr) return Boolean;
 	
 	function Contains (Part : in Part_Ptr; Atom : in Atom_Ptr) return Boolean;
 	function Contains (Dest,Src : in Part_Ptr) return Boolean;
-	function Exclude_Part(List : in Part_Ptr; Part : in Part_Ptr)
-						 return Part_Ptr;
+	procedure Exclude_Part (List : in Part_Ptr; Part : in Part_Ptr);
 
 	function Step_Forward (Part : in Part_Ptr; Figure : in Part_Ptr) 
 						  return Boolean;
@@ -60,6 +62,7 @@ package Part is
     procedure Put (Part : in Part_Ptr);
 	procedure Put_All (Part : in Part_Ptr);
     procedure Put_Advanced (Part : in Part_Ptr);
+
 
     procedure Free (Part : in out Part_Ptr);
 	procedure Free_All (Part : in out Part_Ptr);
