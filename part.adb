@@ -11,17 +11,18 @@ package body Part is
     function Create_Part return Part_Ptr is
     begin
         return new Part_Type'(Size => 0,
-							  Data  => Get_Atom_Null_Ptr,
-							  Next => null,
-							  Rot_X => 0,
-							  Rot_Y => 0,
-							  Rot_Z => 0,
-							  Rot_Cntr => 0,
-							  Move_X => 0,
-							  Move_Y => 0,
-							  Move_Z => 0,
-							  Poss_List => null,
-							  Poss_Cntr => 0);
+			      Data  => Get_Atom_Null_Ptr,
+			      Next => null,
+			      Rot_X => 0,
+			      Rot_Y => 0,
+			      Rot_Z => 0,
+			      Rot_Cntr => 0,
+			      Move_X => 0,
+			      Move_Y => 0,
+			      Move_Z => 0,
+			      Poss_List => null,
+			      Poss_Cntr => 0,
+			      Order => 0);
     end Create_Part;
 
 	-----------------------------------------------------------------------
@@ -305,6 +306,22 @@ package body Part is
 		return true;
 	end Inc_Rot_Cntr;
 
+	----------------------------------------------------------------------
+	-- Returns the value of the parts "Order" field
+	----------------------------------------------------------------------
+	function Get_Order (Part : in Part_Ptr) return Integer is
+	begin
+	   return Part.All.Order;
+	end Get_Order;
+	
+	----------------------------------------------------------------------
+	-- Returns the value of the parts "Order" field
+	----------------------------------------------------------------------
+	procedure Set_Order (Part : in Part_Ptr; Val : in Integer) is
+	begin
+	   Part.All.Order := Val;
+	end Set_Order;
+	
     ----------------------------------------------------------------------
     -- Returns the value of the parts "Data" field
     ----------------------------------------------------------------------

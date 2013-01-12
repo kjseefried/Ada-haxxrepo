@@ -1,0 +1,5 @@
+# Part: 1
+Dimensions: 3x3x1
+ 1 1 0
+ 1 1 1
+ 1 1 1

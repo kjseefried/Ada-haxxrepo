@@ -103,16 +103,18 @@ begin
 	Insert(Figure2, Part4);
 	
 	
-
-	Part2 := Copy(Part1);
-	Atom1 := Get_Data(Part1);
-	Set_X(Atom1, 1337);
-
-	Put(Part1);	
-	Put_Line("-----------------");
-	Put(Part2);	
+	if Solve(Figure1, Figure2) then
+		Put("SOLVED!");
+		Put(Figure2);
+	else
+		Put("UNSOLVED!");
+	end if;
 	
-	
+	New_Line(10);
+	Put(Part0);
+	Rotate_X(Part0);
+	New_Line;
+	Put(Get_Rot_Cntr(Part0));
 	
 	
 end Test_Part;

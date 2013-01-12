@@ -68,22 +68,23 @@ package Part is
 	procedure Free_All (Part : in out Part_Ptr);
 
 private
-    type Part_Ptr is access Part_Type;
-    type Part_Type is
-       record
-		   Data : Atom_Ptr;
-		   Size  : Integer;
-		   Next  : Part_Ptr := null;
-		   Rot_X : Integer;
-		   Rot_Y : Integer;
-		   Rot_Z : Integer;
-		   Rot_Cntr : Integer;
-		   Move_X : Integer;
-		   Move_Y : Integer;
-		   Move_Z : Integer;
-		   Poss_List : Part_Ptr := null;
-		   Poss_Cntr : Integer;
-       end record;
+   type Part_Ptr is access Part_Type;
+   type Part_Type is
+      record
+	 Data : Atom_Ptr;
+	 Size  : Integer;
+	 Next  : Part_Ptr := null;
+	 Rot_X : Integer;
+	 Rot_Y : Integer;
+	 Rot_Z : Integer;
+	 Rot_Cntr : Integer;
+	 Move_X : Integer;
+	 Move_Y : Integer;
+	 Move_Z : Integer;
+	 Poss_List : Part_Ptr := null;
+	 Poss_Cntr : Integer;
+	 Order : Integer;
+      end record;
 
 end Part;
 

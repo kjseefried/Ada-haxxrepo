@@ -154,7 +154,7 @@ package body Atom is
 	end Put_All;
 
     ---------------------------------------------------------------------------
-    -- Deallocate the memory of an atom.
+    -- Deallocate the memory of an atom. Kind of...
     ---------------------------------------------------------------------------
     function "=" (Left,Right : in Atom_Ptr) return Boolean is
     begin
