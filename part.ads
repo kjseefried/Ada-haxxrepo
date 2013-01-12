@@ -15,12 +15,14 @@ package Part is
     function Get_Next (Part : in Part_Ptr) return Part_Ptr;
     function Has_Next (Part : in Part_Ptr) return Boolean;
 
+	function Inc_Rot_Cntr (Part : in Part_Ptr) return Boolean;
+	function Get_Rot_Cntr (Part : in Part_Ptr) return Integer;
 	function Get_Rot_X (Part : in Part_Ptr) return Integer;
     function Get_Rot_Y (Part : in Part_Ptr) return Integer;
 	function Get_Rot_Z (Part : in Part_Ptr) return Integer;
-	function Get_Rot_Cntr (Part : in Part_Ptr) return Integer;
+
 	function Get_Poss_Cntr (Part : in Part_Ptr) return Integer;
-	
+
 	function Get_Move_X (Part : in Part_Ptr) return Integer;
     function Get_Move_Y (Part : in Part_Ptr) return Integer;
 	function Get_Move_Z (Part : in Part_Ptr) return Integer;
@@ -36,11 +38,6 @@ package Part is
 	function Step_Forward (Part : in Part_Ptr; Figure : in Part_Ptr) 
 						  return Boolean;
 
-	procedure Set_Rot_X (Part : in Part_Ptr; Val : in Integer);
-	procedure Set_Rot_Y (Part : in Part_Ptr; Val : in Integer);
-	procedure Set_Rot_Z (Part : in Part_Ptr; Val : in Integer);
-	procedure Set_Rot_Cntr (Part : in Part_Ptr; Val : in Integer);
-
 	procedure Set_Move_X (Part : in Part_Ptr; Val : in Integer);
 	procedure Set_Move_Y (Part : in Part_Ptr; Val : in Integer);
 	procedure Set_Move_Z (Part : in Part_Ptr; Val : in Integer);
@@ -54,7 +51,6 @@ package Part is
     procedure Rotate_Z (Part : in Part_Ptr);
     procedure Rotate_X (Part : in Part_Ptr);
     procedure Rotate_Y (Part : in Part_Ptr);
-    procedure Reverse_Rotations (Part : in Part_Ptr);
 	
 	procedure Move_To (Part : in Part_Ptr; To : in Atom_Ptr);
 	procedure Move_X (Part : in Part_Ptr; Value : in Integer);
@@ -63,6 +59,7 @@ package Part is
 
     procedure Put (Part : in Part_Ptr);
 	procedure Put_All (Part : in Part_Ptr);
+    procedure Put_Advanced (Part : in Part_Ptr);
 
     procedure Free (Part : in out Part_Ptr);
 	procedure Free_All (Part : in out Part_Ptr);

@@ -126,7 +126,6 @@ package body Part is
 		Move_X(Part, Offset_X);
 		Move_Y(Part, Offset_Y);
 		Move_Z(Part, Offset_Z);
-		
 	end Move_To;
 	
 	---------------------------------------------------------------------------
@@ -200,46 +199,10 @@ package body Part is
 						 return Boolean is
 		No_Poss_List : exception;
 		Tmp_Atom : Atom_Ptr;
+		Orig_Part : Part_Ptr := Copy(Part);
 	begin
-		if Get_Poss_List(Part) = null then
-			raise No_Poss_List;
-		end if;
-
-		loop
-			if Get_Poss_Cntr(Part) >= Get_Size(Get_Poss_List(Part)) then
-				if Get_Rot_Cntr(Part) = 64 then
-					return False;
-				end if;
-
-				Part.Poss_Cntr := 0;
-				Reverse_Rotations(Part);
-
-				
-				for L in 0..(Get_Rot_Cntr(Part) mod 4) loop
-					Rotate_X(Part);
-				end loop;
-				for L in 0..((Get_Rot_Cntr(Part)/4) mod 4) loop
-					Rotate_Y(Part);
-				end loop;
-				for L in 0..(Get_Rot_Cntr(Part)/16) loop
-					Rotate_Z(Part);
-				end loop;
-				
-				Set_Rot_Cntr(Part, Get_Rot_Cntr(Part) + 1);
-			end if;
-			Tmp_Atom := Get_Data(Get_Poss_List(Part));
-			for L in 1..Get_Poss_Cntr(Part) loop
-				Tmp_Atom := Get_Next(Tmp_Atom);
-			end loop;
-			Move_To(Part, Tmp_Atom);
-			if Contains(Figure, Part) then
-				Part.Poss_Cntr := Part.Poss_Cntr + 1;
-				return True;
-			end if;
-
-
-			Part.Poss_Cntr := Part.Poss_Cntr + 1;
-		end loop;
+		
+		return true;
 	end Step_Forward;
 	
     ----------------------------------------------------------------------
@@ -303,10 +266,28 @@ package body Part is
     ----------------------------------------------------------------------
     -- Sets the parts "Rot_Cntr" field to Val
     ----------------------------------------------------------------------
-	procedure Set_Rot_Cntr (Part : in Part_Ptr; Val : in Integer) is
+	function Inc_Rot_Cntr (Part : in Part_Ptr) return Boolean is
+		Tmp:Integer;
 	begin
-		Part.all.Rot_Cntr := Val;
-	end Set_Rot_Cntr;
+		Part.All.Rot_Cntr := Part.All.Rot_Cntr + 1;
+
+		if Part.All.Rot_Cntr > 63 then
+			Put_Line("Exit" & Part.All.Rot_Cntr'Img);
+			return False;
+		end if;
+
+		Rotate_X(Part);
+
+		if Part.All.Rot_Cntr mod 4 = 0 then
+			Rotate_Y(Part);
+		end if;
+
+		if Part.All.Rot_Cntr mod 16 = 0 then
+			Rotate_Z(Part);
+		end if;
+		
+		return true;
+	end Inc_Rot_Cntr;
 
     ----------------------------------------------------------------------
     -- Returns the value of the parts "Data" field
@@ -316,7 +297,7 @@ package body Part is
         return Part.All.Data;
     end Get_Data;
 
-    ----------------------------------------------------------------------
+	----------------------------------------------------------------------
     -- Sets the parts "Data" field to Atom
     ----------------------------------------------------------------------
     procedure Set_Data (Part : in Part_Ptr; Atom : in Atom_Ptr) is
@@ -329,48 +310,24 @@ package body Part is
     ----------------------------------------------------------------------
     function Get_Rot_X (Part : in Part_Ptr) return Integer is
     begin
-        return Part.All.Rot_X;
+		return Part.All.Rot_Cntr mod 4;
     end Get_Rot_X;
-
-    ----------------------------------------------------------------------
-    -- Sets the parts "Rot_X" field to Val
-    ----------------------------------------------------------------------
-    procedure Set_Rot_X (Part : in Part_Ptr; Val : in Integer) is
-    begin
-        Part.all.Rot_X := Val;
-    end Set_Rot_X;
 
     ----------------------------------------------------------------------
     -- Returns the value of the parts "Rot_Y" field
     ----------------------------------------------------------------------
     function Get_Rot_Y (Part : in Part_Ptr) return Integer is
     begin
-        return Part.All.Rot_Y;
+		return (Part.All.Rot_Cntr / 4) mod 4;
     end Get_Rot_Y;
-
-    ----------------------------------------------------------------------
-    -- Sets the parts "Rot_Y" field to Val
-    ----------------------------------------------------------------------
-    procedure Set_Rot_Y (Part : in Part_Ptr; Val : in Integer) is
-    begin
-        Part.all.Rot_Y := Val;
-    end Set_Rot_Y;
 
     ----------------------------------------------------------------------
     -- Returns the value of the parts "Rot_Z" field
     ----------------------------------------------------------------------
     function Get_Rot_Z (Part : in Part_Ptr) return Integer is
     begin
-        return Part.All.Rot_Z;
+		return (Part.All.Rot_Cntr / 16) mod 4;
     end Get_Rot_Z;
-
-    ----------------------------------------------------------------------
-    -- Sets the parts "Rot_Z" field to Val
-    ----------------------------------------------------------------------
-    procedure Set_Rot_Z (Part : in Part_Ptr; Val : in Integer) is
-    begin
-        Part.all.Rot_Z := Val;
-    end Set_Rot_Z;
 
     ----------------------------------------------------------------------
     -- Returns the value of the parts "Max_X" field
@@ -484,18 +441,32 @@ package body Part is
     end Put;
 
     ----------------------------------------------------------------------
+    -- Prints the rotation and movement of this part.
+    ----------------------------------------------------------------------
+    procedure Put_Advanced (Part : in Part_Ptr) is
+    begin
+		Put_Line("----------------------------");
+		Put("Rot X: "); Put(Get_Rot_X(Part), 0); New_Line;
+		Put("Rot Y: "); Put(Get_Rot_Y(Part), 0); New_Line;
+		Put("Rot Z: "); Put(Get_Rot_Z(Part), 0); New_Line;
+		Put_Line("-");
+		Put("Move X: "); Put(Get_Move_X(Part), 0); New_Line;
+		Put("Move Y: "); Put(Get_Move_Y(Part), 0); New_Line;
+		Put("Move Z: "); Put(Get_Move_Z(Part), 0); New_Line;
+		Put_Line("----------------------------");
+    end Put_Advanced;
+
+    ----------------------------------------------------------------------
     -- Rotates the whole part around the z-axis, modifies the Rot fields
     ----------------------------------------------------------------------
     procedure Rotate_Z(Part : in Part_Ptr) is
         temp_atom : Atom_Ptr := Get_Data(Part);
-        temp_part_x : Integer;
+        temp_part_y : Integer;
     begin
-		Set_Rot_Z(Part, Get_Rot_Z(Part) + 1);
-
 		loop
-            temp_part_x := -1 * Get_X(temp_atom);
-            Set_X(temp_atom,Get_Y(temp_atom));
-            Set_Y(temp_atom,temp_part_x);
+            temp_part_y := -1 * Get_Y(temp_atom);
+            Set_Y(temp_atom,Get_X(temp_atom));
+            Set_X(temp_atom,temp_part_Y);
 			if not Has_Next(Temp_Atom) then
 				return;
 			end if;
@@ -510,8 +481,6 @@ package body Part is
         temp_atom : Atom_Ptr := Get_Data(Part);
         temp_part_z : Integer;
     begin
-		Set_Rot_X(Part, Get_Rot_X(Part) + 1);
-
         loop
             temp_part_z := -1 * Get_Z(temp_atom);
             Set_Z(temp_atom,Get_Y(temp_atom));
@@ -530,8 +499,6 @@ package body Part is
         temp_atom : Atom_Ptr := Get_Data(Part);
         temp_part_x : Integer;
     begin
-		Set_Rot_Y(Part, Get_Rot_Y(Part) + 1);
-
         loop
             temp_part_x := -1 * Get_X(temp_atom);
             Set_X(temp_atom,Get_Z(temp_atom));
@@ -542,34 +509,6 @@ package body Part is
             temp_atom := Get_Next(temp_atom);
         end loop;
     end Rotate_Y;
-
-    ----------------------------------------------------------------------
-    -- Reverses all rotations done to a part
-    ----------------------------------------------------------------------
-    procedure Reverse_Rotations (Part : in Part_Ptr) is
-    begin
-        if Get_Rot_Z(Part) /= 0 then
-            for z in 1..(4 - (Get_Rot_Z(Part) mod 4)) loop
-                Rotate_Z(Part);
-            end loop;
-        end if;
-
-        if Get_Rot_Y(Part) /= 0 then
-            for y in 1..(4 - (Get_Rot_Y(Part)  mod 4)) loop
-                Rotate_Y(Part);
-            end loop;
-        end if;
-
-        if Get_Rot_X(Part) /= 0 then
-            for x in 1..(4 - (Get_Rot_X(Part) mod 4)) loop
-                Rotate_X(Part);
-            end loop;
-        end if;
-	
-		Set_Rot_Y(Part, 0);
-		Set_Rot_X(Part, 0);
-		Set_Rot_Z(Part, 0);
-    end Reverse_Rotations;
 
     ----------------------------------------------------------------------
     -- Move the part
